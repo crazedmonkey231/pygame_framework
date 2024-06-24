@@ -64,20 +64,12 @@ class Game(object):
 
     def main(self):
         while self.running:
-            # poll for events
-            # pygame.QUIT event means the user clicked X to close your window
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-
             self.all_sprites.update()
-
             self.screen.blit(self.background, (0, 0))
-
             self.all_sprites.draw(self.screen)
-
             self.screen.blit(self.overlay, (0, 0))
-
             pygame.display.flip()
-
             self.delta_time = self.clock.tick(self.fps) / 1000
