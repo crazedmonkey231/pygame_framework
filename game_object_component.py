@@ -28,8 +28,8 @@ class HealthComponent(GameObjectComponent):
         if not self.health:
             self.parent.kill()
 
-    def comp_update(self):
-        super().comp_update()
+    def comp_update(self, *args, **kwargs):
+        super().comp_update(*args, **kwargs)
         if not self.health_update_change != 0:
             self.update_health(self.health_update_change)
 
@@ -49,9 +49,6 @@ class PowerTrackerComponent(GameObjectComponent):
     def update_power(self, amount: float):
         self.total_power = min(max(self.total_power + amount, 0), 100)
 
-    def comp_update(self):
-        pass
-
 
 #
 # Count Down Component
@@ -62,7 +59,7 @@ class CountDownComponent(GameObjectComponent):
         self.parent: GameObjectWithComponents = parent
         self.time_to_live: float = time_to_live
 
-    def comp_update(self):
+    def comp_update(self, *args, **kwargs):
         self.time_to_live -= game.delta_time
         if 0 >= self.time_to_live:
             self.parent.apply_damage(self.parent, -999999)
