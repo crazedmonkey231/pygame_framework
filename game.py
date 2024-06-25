@@ -33,6 +33,13 @@ class Game(object):
         for sprite in sprites:
             self.all_sprites.add(sprite)
 
+    # Add sprites to renderer with positions
+    def add_sprites_with_pos_to_render(self, sprites_dict: dict[Sprite, Vector2]):
+        for sprite, pos in sprites_dict.items():
+            if sprite.rect:
+                sprite.rect.center = [pos.x, pos.y]
+            self.all_sprites.add(sprite)
+
     # Get sprites from render layer
     def get_sprites_from_render_layer(self, layer: int = 0):
         return self.all_sprites.get_sprites_from_layer(layer)
@@ -60,6 +67,7 @@ class Game(object):
         class NoneSound:
             def play(self):
                 pass
+
         if not pygame.mixer or not pygame.mixer.get_init():
             return NoneSound()
         fullname = os.path.join(self.data_dir, name)
