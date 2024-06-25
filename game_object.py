@@ -87,7 +87,7 @@ class GameObjectWithHealth(GameObjectWithMovement):
 
 
 #
-# Game Object With Health
+# Game Object With Timer
 #
 class GameObjectWithTimer(GameObjectWithHealth):
     def __init__(self, parent: GameObject = None, time_to_live: float = 0):
