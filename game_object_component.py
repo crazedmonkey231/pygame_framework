@@ -7,6 +7,7 @@ from config import *
 class GameObjectComponent(object):
     def __init__(self, parent: GameObjectWithComponents):
         self.parent = parent
+        self.needs_update = True
 
     def comp_update(self, *args, **kwargs):
         pass
@@ -35,6 +36,42 @@ class HealthComponent(GameObjectComponent):
 
 
 #
+# Movement Component
+#
+class MovementComponent(GameObjectComponent):
+    def __init__(self, parent: GameObjectWithComponents, move_speed: Vector2 = Vector2(0, 0)):
+        super().__init__(parent)
+        self.move_speed: Vector2 = move_speed
+        self.velocity = Vector2(0, 0)
+
+    def comp_update(self, *args, **kwargs):
+        super().comp_update(*args, **kwargs)
+        if self.move_speed.x != 0 and self.move_speed.y != 0:
+            center = self.parent.rect.center
+            center_x = center[0] + game.delta_value(self.move_speed.x)
+            center_y = center[1] + game.delta_value(self.move_speed.y)
+            self.parent.rect.center = [center_x, center_y]
+            self.velocity = Vector2(center_x - center[0], center_y - center[1])
+        else:
+            if self.velocity.x != 0 and self.velocity.y != 0:
+                self.velocity = Vector2(0, 0)
+
+
+#
+# Count Down Component
+#
+class CountDownComponent(GameObjectComponent):
+    def __init__(self, parent: GameObjectWithComponents, time_to_live: float = 10):
+        super().__init__(parent)
+        self.time_to_live: float = time_to_live
+
+    def comp_update(self, *args, **kwargs):
+        self.time_to_live -= game.delta_time
+        if 0 >= self.time_to_live:
+            self.parent.apply_damage(self.parent, -999999)
+
+
+#
 # Power Up Tracker Component
 #
 class PowerTrackerComponent(GameObjectComponent):
@@ -48,18 +85,3 @@ class PowerTrackerComponent(GameObjectComponent):
 
     def update_power(self, amount: float):
         self.total_power = min(max(self.total_power + amount, 0), 100)
-
-
-#
-# Count Down Component
-#
-class CountDownComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, time_to_live: float = 10):
-        super().__init__(parent)
-        self.parent: GameObjectWithComponents = parent
-        self.time_to_live: float = time_to_live
-
-    def comp_update(self, *args, **kwargs):
-        self.time_to_live -= game.delta_time
-        if 0 >= self.time_to_live:
-            self.parent.apply_damage(self.parent, -999999)

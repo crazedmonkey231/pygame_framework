@@ -22,6 +22,12 @@ class GameObject(Sprite):
     def on_destroy(self):
         pass
 
+    def on_clicked(self):
+        pass
+
+    def on_un_clicked(self):
+        pass
+
     def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
         pass
 
@@ -41,25 +47,36 @@ class GameObjectWithComponents(GameObjectBase):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
         self.components: list[GameObjectComponent] = list()
+        self.components.append(MovementComponent)
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
         for component in self.components:
-            component.comp_update(*args, **kwargs)
+            if component.needs_update:
+                component.comp_update(*args, **kwargs)
 
     def get_component_by_type(self, comp_type):
         found = None
-        for c in self.components:
-            if c.__class__ == comp_type:
-                found = c
+        for component in self.components:
+            if component.__class__ == comp_type:
+                found = component
                 break
         return found
 
 
 #
+# Game Object With Movement
+#
+class GameObjectWithMovement(GameObjectWithComponents):
+    def __init__(self, parent: GameObject = None):
+        super().__init__(parent)
+        self.components.append(MovementComponent)
+
+
+#
 # Game Object With Health
 #
-class GameObjectWithHealth(GameObjectWithComponents):
+class GameObjectWithHealth(GameObjectWithMovement):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
         self.components.append(HealthComponent(self))

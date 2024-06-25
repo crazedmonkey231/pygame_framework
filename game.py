@@ -21,7 +21,8 @@ class Game(object):
         self.running: bool = True
         self.fps: int = 120
         self.delta_time: float = 0
-        self.delta_time_slowdown: float = 1
+        self.slowdown_amount: float = 1
+        self.slowdown_max: float = 1000
         self.all_sprites: LayeredUpdates = LayeredUpdates()
 
     def add_sprites_to_render(self, sprites: list[Sprite]):
@@ -32,8 +33,7 @@ class Game(object):
         return self.all_sprites.get_sprites_from_layer(layer)
 
     def delta_value(self, value) -> float:
-        self.delta_time_slowdown = min(max(self.delta_time_slowdown, 0), 100)
-        return value * (self.delta_time / self.delta_time_slowdown)
+        return value * self.delta_time
 
     def load_image(self, name, color_key=None, scale=1):
         fullname = os.path.join(self.data_dir, name)
@@ -72,4 +72,6 @@ class Game(object):
             self.all_sprites.draw(self.screen)
             self.screen.blit(self.overlay, (0, 0))
             pygame.display.flip()
-            self.delta_time = self.clock.tick(self.fps) / 1000
+            if not 1 <= self.slowdown_amount <= self.slowdown_max:
+                self.slowdown_amount = min(max(self.slowdown_amount, 1), self.slowdown_max)
+            self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_amount

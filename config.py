@@ -7,7 +7,8 @@ from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates
 from game import Game
 from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, Character, Player, AiPlayer, Effect,
                          Widget)
-from game_object_component import GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent
+from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
+                                   MovementComponent)
 
 
 def map_range(value, start1, stop1, start2, stop2):
