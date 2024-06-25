@@ -46,15 +46,11 @@ class MovementComponent(GameObjectComponent):
 
     def comp_update(self, *args, **kwargs):
         super().comp_update(*args, **kwargs)
-        if self.move_speed.x != 0 and self.move_speed.y != 0:
-            center = self.parent.rect.center
-            center_x = center[0] + game.delta_value(self.move_speed.x)
-            center_y = center[1] + game.delta_value(self.move_speed.y)
-            self.parent.rect.center = [center_x, center_y]
-            self.velocity = Vector2(center_x - center[0], center_y - center[1])
-        else:
-            if self.velocity.x != 0 and self.velocity.y != 0:
-                self.velocity = Vector2(0, 0)
+        center = self.parent.rect.center
+        center_x = center[0] + game.delta_value(self.move_speed.x)
+        center_y = center[1] + game.delta_value(self.move_speed.y)
+        self.parent.rect.center = [center_x, center_y]
+        self.velocity = Vector2(center_x - center[0], center_y - center[1])
 
 
 #
