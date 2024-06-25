@@ -87,9 +87,10 @@ class GameObjectWithMovement(GameObjectWithComponents):
 # Game Object With Health
 #
 class GameObjectWithHealth(GameObjectWithComponents):
-    def __init__(self, parent: GameObject = None):
+    def __init__(self, parent: GameObject = None, health: float = 100, health_max: float = 100,
+                 health_update_change: float = 0):
         super().__init__(parent)
-        self.components.append(HealthComponent(self))
+        self.components.append(HealthComponent(self, health, health_max, health_update_change))
 
 
 #
