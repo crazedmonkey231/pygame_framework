@@ -12,23 +12,23 @@ class GameObject(Sprite):
         self.layer: int = 0
         self.tags: set[str] = set()
 
-    def kill(self):
-        self.on_destroy()
-        super().kill()
-
     def on_init(self):
         pass
 
     def on_destroy(self):
         pass
 
+    def kill(self):
+        self.on_destroy()
+        super().kill()
+
+    def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
+        pass
+
     def on_clicked(self):
         pass
 
     def on_un_clicked(self):
-        pass
-
-    def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
         pass
 
 
