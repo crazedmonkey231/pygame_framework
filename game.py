@@ -50,9 +50,7 @@ class Game(object):
 
     # Image loader
     def load_image(self, name, color_key=None, scale=1):
-        fullname = os.path.join(self.data_dir, name)
-        image = pygame.image.load(fullname)
-        image = image.convert_alpha()
+        image = pygame.image.load(os.path.join(self.data_dir, name)).convert_alpha()
         size = image.get_size()
         size = (size[0] * scale, size[1] * scale)
         image = pygame.transform.scale(image, size)
@@ -67,12 +65,9 @@ class Game(object):
         class NoneSound:
             def play(self):
                 pass
-
         if not pygame.mixer or not pygame.mixer.get_init():
             return NoneSound()
-        fullname = os.path.join(self.data_dir, name)
-        sound = pygame.mixer.Sound(fullname)
-        return sound
+        return pygame.mixer.Sound(os.path.join(self.data_dir, name))
 
     # Main
     def main(self):
