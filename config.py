@@ -10,6 +10,8 @@ from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, C
 from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
                                    MovementComponent)
 
+config_health_max = 999999
+
 
 def map_range(value, start1, stop1, start2, stop2):
     return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))

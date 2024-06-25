@@ -17,15 +17,15 @@ class GameObjectComponent(object):
 # Health Component
 #
 class HealthComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, health: float = 100, max_health: float = 100,
+    def __init__(self, parent: GameObjectWithComponents, health: float = 100, health_max: float = 100,
                  health_update_change: float = 0):
         super().__init__(parent)
         self.health: float = health
-        self.health_max: float = max_health
+        self.health_max: float = min(health_max, config_health_max)
         self.health_update_change: float = health_update_change
 
     def update_health(self, amount: float):
-        self.health = min(max(self.health + amount, 0), self.health_max)
+        self.health = min(max(self.health + amount, 0), self.health_max, config_health_max)
         if not self.health:
             self.parent.kill()
 
@@ -65,7 +65,7 @@ class CountDownComponent(GameObjectComponent):
         super().comp_update(*args, **kwargs)
         self.time_to_live -= game.delta_time
         if 0 >= self.time_to_live:
-            self.parent.apply_damage(self.parent, -999999)
+            self.parent.apply_damage(self.parent, -config_health_max)
 
 
 #

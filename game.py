@@ -24,8 +24,8 @@ class Game(object):
         self.running: bool = True
         self.fps: int = 120
         self.delta_time: float = 0
-        self.slowdown_amount: float = 1
-        self.slowdown_max: float = 1000
+        self.slowdown_factor: float = 1
+        self.slowdown_factor_max: float = 1000
         self.all_sprites: LayeredUpdates = LayeredUpdates()
 
     # Add sprites to renderer
@@ -77,6 +77,6 @@ class Game(object):
             self.all_sprites.draw(self.screen)
             self.screen.blit(self.overlay, (0, 0))
             pygame.display.flip()
-            if not 1 <= self.slowdown_amount <= self.slowdown_max:
-                self.slowdown_amount = min(max(self.slowdown_amount, 1), self.slowdown_max)
-            self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_amount
+            if not 1 <= self.slowdown_factor <= self.slowdown_factor_max:
+                self.slowdown_factor = min(max(self.slowdown_factor, 1), self.slowdown_factor_max)
+            self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_factor
