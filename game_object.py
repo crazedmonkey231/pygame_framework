@@ -65,6 +65,14 @@ class GameObjectWithComponents(GameObjectBase):
                 return component
         return None
 
+    def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
+        super().apply_damage(causer, damage_amount)
+        health_component: HealthComponent = self.get_component_by_type(HealthComponent)
+        if health_component:
+            health_component.update_health(damage_amount)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 #
 # Game Object With Movement
@@ -78,33 +86,31 @@ class GameObjectWithMovement(GameObjectWithComponents):
 #
 # Game Object With Health
 #
-class GameObjectWithHealth(GameObjectWithMovement):
+class GameObjectWithHealth(GameObjectWithComponents):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
         self.components.append(HealthComponent(self))
-
-    def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
-        super().apply_damage(causer, damage_amount)
-        health_component: HealthComponent = self.get_component_by_type(HealthComponent)
-        health_component.update_health(damage_amount)
 
 
 #
 # Game Object With Timer
 #
-class GameObjectWithTimer(GameObjectWithHealth):
+class GameObjectWithTimer(GameObjectWithComponents):
     def __init__(self, parent: GameObject = None, time_to_live: float = 0):
         super().__init__(parent)
         self.components.append(CountDownComponent(self, time_to_live))
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+
 #
 # Character
 #
-class Character(GameObjectWithHealth):
+class Character(GameObjectWithMovement):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
         self.is_player_controlled: bool = False
+        self.components.append(HealthComponent(self))
 
 
 #
@@ -124,10 +130,12 @@ class AiPlayer(Character):
         super().__init__(parent)
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+
 #
 # Effect
 #
-class Effect(GameObjectWithHealth):
+class Effect(GameObjectWithMovement):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
 
@@ -135,15 +143,18 @@ class Effect(GameObjectWithHealth):
 #
 # Effect With Timer
 #
-class EffectWithTimer(GameObjectWithTimer):
+class EffectWithTimer(Effect):
     def __init__(self, parent: GameObject = None, time_to_live: float = 0):
-        super().__init__(parent, time_to_live)
+        super().__init__(parent)
+        self.components.append(CountDownComponent(self, time_to_live))
 
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 #
 # Widget
 #
-class Widget(GameObjectWithHealth):
+class Widget(GameObjectWithComponents):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
 
@@ -151,6 +162,7 @@ class Widget(GameObjectWithHealth):
 #
 # Widget With Timer
 #
-class WidgetWithTimer(GameObjectWithTimer):
+class WidgetWithTimer(Widget):
     def __init__(self, parent: GameObject = None, time_to_live: float = 0):
-        super().__init__(parent, time_to_live)
+        super().__init__(parent)
+        self.components.append(CountDownComponent(self, time_to_live))
