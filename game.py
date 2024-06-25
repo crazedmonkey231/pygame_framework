@@ -34,7 +34,7 @@ class Game(object):
             self.all_sprites.add(sprite)
 
     # Add sprites to renderer with positions
-    def add_sprites_with_pos_to_render(self, sprites_dict: dict[Sprite, Vector2]):
+    def add_sprites_to_render_with_pos(self, sprites_dict: dict[Sprite, Vector2]):
         for sprite, pos in sprites_dict.items():
             if sprite.rect:
                 sprite.rect.center = [pos.x, pos.y]
@@ -43,6 +43,11 @@ class Game(object):
     # Get sprites from render layer
     def get_sprites_from_render_layer(self, layer: int = 0):
         return self.all_sprites.get_sprites_from_layer(layer)
+
+    # Get sprites with positions from render layer
+    def get_sprites_from_render_layer_with_pos(self, layer: int = 0) -> dict[Sprite, Vector2]:
+        sprites = self.all_sprites.get_sprites_from_layer(layer)
+        return dict([(sprite, Vector2(sprite.rect.center[0], sprite.rect.center[1])) for sprite in sprites])
 
     # Calculate the delta of a value from the delta time
     def delta_value(self, value) -> float:
