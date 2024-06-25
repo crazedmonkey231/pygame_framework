@@ -34,8 +34,8 @@ class Game(object):
             self.all_sprites.add(sprite)
 
     # Add sprites to renderer with positions
-    def add_sprites_to_render_with_pos(self, sprites_tuple: tuple[Sprite, Vector2]):
-        for item in sprites_tuple:
+    def add_sprites_to_render_with_pos(self, sprites_list: list[tuple[Sprite, Vector2]]):
+        for item in sprites_list:
             sprite, pos = item
             if sprite.rect:
                 sprite.rect.center = [pos.x, pos.y]
