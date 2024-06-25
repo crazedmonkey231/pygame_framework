@@ -52,8 +52,7 @@ class Game(object):
     def load_image(self, name, color_key=None, scale=1):
         image = pygame.image.load(os.path.join(self.data_dir, name)).convert_alpha()
         size = image.get_size()
-        size = (size[0] * scale, size[1] * scale)
-        image = pygame.transform.scale(image, size)
+        image = pygame.transform.scale(image, (size[0] * scale, size[1] * scale))
         if color_key is not None:
             if color_key == -1:
                 color_key = image.get_at((0, 0))
