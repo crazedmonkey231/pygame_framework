@@ -46,7 +46,7 @@ class Game(object):
         return self.all_sprites.get_sprites_from_layer(layer)
 
     # Get sprites with positions from render layer
-    def get_sprites_from_render_layer_with_pos(self, layer: int = 0) -> tuple[Sprite, Vector2]:
+    def get_sprites_from_render_layer_with_pos(self, layer: int = 0) -> list[tuple[Sprite, Vector2]]:
         sprites = self.all_sprites.get_sprites_from_layer(layer)
         return [(sprite, Vector2(sprite.rect.center[0], sprite.rect.center[1])) for sprite in sprites]
 
