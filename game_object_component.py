@@ -49,7 +49,7 @@ class MovementComponent(GameObjectComponent):
         center = self.parent.rect.center
         center_x = center[0] + game.delta_value(self.move_speed.x)
         center_y = center[1] + game.delta_value(self.move_speed.y)
-        self.parent.rect.center = [center_x, center_y]
+        self.parent.rect.center = (center_x, center_y)
         self.velocity = Vector2(center_x - center[0], center_y - center[1])
 
 

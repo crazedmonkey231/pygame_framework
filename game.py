@@ -38,7 +38,7 @@ class Game(object):
         for item in sprites_list:
             sprite, pos = item
             if sprite.rect:
-                sprite.rect.center = [pos.x, pos.y]
+                sprite.rect.center = (pos.x, pos.y)
             self.all_sprites.add(sprite)
 
     # Get sprites from render layer
