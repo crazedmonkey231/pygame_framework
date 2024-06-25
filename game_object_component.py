@@ -66,6 +66,7 @@ class CountDownComponent(GameObjectComponent):
         self.time_to_live: float = time_to_live
 
     def comp_update(self, *args, **kwargs):
+        super().comp_update(*args, **kwargs)
         self.time_to_live -= game.delta_time
         if 0 >= self.time_to_live:
             self.parent.apply_damage(self.parent, -999999)
@@ -85,3 +86,6 @@ class PowerTrackerComponent(GameObjectComponent):
 
     def update_power(self, amount: float):
         self.total_power = min(max(self.total_power + amount, 0), 100)
+
+    def comp_update(self, *args, **kwargs):
+        super().comp_update(*args, **kwargs)
