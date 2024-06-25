@@ -60,12 +60,10 @@ class GameObjectWithComponents(GameObjectBase):
                 component.comp_update(*args, **kwargs)
 
     def get_component_by_type(self, comp_type):
-        found = None
         for component in self.components:
             if component.__class__ == comp_type:
-                found = component
-                break
-        return found
+                return component
+        return None
 
 
 #
