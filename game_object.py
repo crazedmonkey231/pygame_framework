@@ -20,6 +20,7 @@ class GameObject(Sprite):
 
     def kill(self):
         self.on_destroy()
+        self.parent = None
         super().kill()
 
     def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
@@ -47,6 +48,10 @@ class GameObjectWithComponents(GameObjectBase):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
         self.components: list[GameObjectComponent] = list()
+
+    def on_destroy(self):
+        super().on_destroy()
+        self.components.clear()
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
@@ -81,6 +86,7 @@ class GameObjectWithHealth(GameObjectWithMovement):
         self.components.append(HealthComponent(self))
 
     def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
+        super().apply_damage(causer, damage_amount)
         health_component: HealthComponent = self.get_component_by_type(HealthComponent)
         health_component.update_health(damage_amount)
 
