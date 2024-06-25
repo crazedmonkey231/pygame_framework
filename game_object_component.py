@@ -25,7 +25,7 @@ class HealthComponent(GameObjectComponent):
         self.health_update_change: float = health_update_change
 
     def update_health(self, amount: float):
-        self.health = min(max(self.health + amount, 0), self.health_max, config_health_max)
+        self.health = min(max(self.health + amount, 0), self.health_max)
         if not self.health:
             self.parent.kill()
 
