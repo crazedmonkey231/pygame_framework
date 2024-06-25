@@ -65,7 +65,10 @@ class CountDownComponent(GameObjectComponent):
         super().comp_update(*args, **kwargs)
         self.time_to_live -= game.delta_time
         if 0 >= self.time_to_live:
-            self.parent.apply_damage(self.parent, -config_health_max)
+            if self.parent.get_component_by_type(HealthComponent):
+                self.parent.apply_damage(self.parent, -config_health_max)
+            else:
+                self.parent.kill()
 
 
 #
