@@ -9,7 +9,7 @@ class GameObject(Sprite):
         Sprite.__init__(self)
         self.on_init()
         self.parent = parent
-        self.layer: int = 0
+        self._layer: int = render_layer_default
         self.tags: set[str] = set()
 
     def on_init(self):

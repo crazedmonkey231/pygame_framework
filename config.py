@@ -10,7 +10,14 @@ from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, C
 from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
                                    MovementComponent)
 
+
+# Health max config, for damage and health component
 config_health_max = 999999
+
+# Render layers
+render_layer_default: int = 0
+render_layer_middle: int = 1
+render_layer_top: int = 2
 
 
 def map_range(value, start1, stop1, start2, stop2):
