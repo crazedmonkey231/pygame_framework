@@ -47,7 +47,6 @@ class GameObjectWithComponents(GameObjectBase):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
         self.components: list[GameObjectComponent] = list()
-        self.components.append(MovementComponent)
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
