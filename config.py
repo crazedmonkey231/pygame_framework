@@ -31,6 +31,7 @@ render_layer_middle: int = 1
 render_layer_top: int = 2
 
 
+# Map a range to another
 def map_range(value, start1, stop1, start2, stop2):
     return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
 
@@ -54,4 +55,5 @@ def load_sound(self, name) -> object:
     return pygame.mixer.Sound(os.path.join(data_dir, name))
 
 
+# Main game object
 game: Game = Game()
