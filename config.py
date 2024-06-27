@@ -1,18 +1,22 @@
 import os
 import pygame
-from pygame import display, Surface, Clock, Vector2
+from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
 from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates
 from game import Game
 from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, Character, Player, AiPlayer, Effect,
-                         Widget)
+                         Widget, NoneSound)
 from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
                                    MovementComponent)
+from game_component import GameComponent
+
+
+mixer_initialized = pygame.mixer or pygame.mixer.get_init()
 
 
 # Health max config, for damage and health component
-config_health_max = 999999
+config_health_max: float = 999999
 
 # Render layers
 render_layer_default: int = 0

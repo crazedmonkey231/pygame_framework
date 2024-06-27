@@ -8,9 +8,16 @@ class GameObjectComponent(object):
     def __init__(self, parent: GameObjectWithComponents):
         self.parent = parent
         self.needs_update = True
+        self.comp_tags: set[str] = set()
+
+    def comp_init(self):
+        pass
 
     def comp_update(self, *args, **kwargs):
         pass
+
+    def comp_destroy(self):
+        self.parent = None
 
 
 #
@@ -46,10 +53,11 @@ class MovementComponent(GameObjectComponent):
 
     def comp_update(self, *args, **kwargs):
         super().comp_update(*args, **kwargs)
-        center = self.parent.rect.center
+        rect = self.parent.rect
+        center = rect.center
         center_x = center[0] + game.delta_value(self.move_speed.x)
         center_y = center[1] + game.delta_value(self.move_speed.y)
-        self.parent.rect.center = (center_x, center_y)
+        self.parent.rect = rect.move((center_x, center_y))
         self.velocity = Vector2(center_x - center[0], center_y - center[1])
 
 
@@ -57,18 +65,34 @@ class MovementComponent(GameObjectComponent):
 # Count Down Component
 #
 class CountDownComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, time_to_live: float = 10):
+    def __init__(self, parent: GameObjectWithComponents, time_to_live: float = 10, should_destroy: bool = True):
         super().__init__(parent)
+        self.countdown_active: bool = True
+        self.should_destroy: bool = should_destroy
         self.time_to_live: float = time_to_live
 
-    def comp_update(self, *args, **kwargs):
-        super().comp_update(*args, **kwargs)
-        self.time_to_live -= game.delta_time
-        if 0 >= self.time_to_live:
-            if self.parent.get_component_by_type(HealthComponent):
+    def reset_countdown(self, time_to_live: float = 10, should_destroy: bool = True):
+        self.time_to_live: float = time_to_live
+        self.should_destroy = should_destroy
+        self.countdown_active = True
+        self.needs_update = True
+
+    def on_countdown_end(self):
+        if self.should_destroy:
+            if self.parent.get_component_by_class(HealthComponent):
                 self.parent.apply_damage(self.parent, -config_health_max)
             else:
                 self.parent.kill()
+        self.time_to_live = 0
+        self.countdown_active = False
+        self.needs_update = False
+
+    def comp_update(self, *args, **kwargs):
+        super().comp_update(*args, **kwargs)
+        if self.countdown_active:
+            self.time_to_live -= game.delta_time
+            if 0 >= self.time_to_live:
+                self.on_countdown_end()
 
 
 #
@@ -88,3 +112,17 @@ class PowerTrackerComponent(GameObjectComponent):
 
     def comp_update(self, *args, **kwargs):
         super().comp_update(*args, **kwargs)
+
+
+#
+# Game Object Holder Component
+#
+class GameObjectHolder(GameObjectComponent):
+    def __init__(self, parent: GameObjectWithComponents, held_game_object: GameObject):
+        super().__init__(parent)
+        self.held_game_object = held_game_object
+        self.needs_update = False
+
+    def comp_destroy(self):
+        super().comp_destroy()
+        self.held_game_object = None

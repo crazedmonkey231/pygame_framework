@@ -12,10 +12,10 @@ class Game(object):
             print("Warning, sound disabled")
         self.main_dir = os.path.split(os.path.abspath(__file__))[0]
         self.data_dir = os.path.join(self.main_dir, 'data')
-        self.pygame_init_return = pygame.init()
+        self.pygame_init_return: tuple[int, int] = pygame.init()
         self.screen: Surface = pygame.display.set_mode((1280, 720))
-        self.screen_center = [self.screen.get_width() / 2, self.screen.get_height() / 2]
-        self.screen_center_vector2 = Vector2(self.screen_center)
+        self.screen_center: tuple[float, float] = (self.screen.get_width() / 2, self.screen.get_height() / 2)
+        self.screen_center_vector2: Vector2 = Vector2(self.screen_center)
         self.background: Surface = Surface(self.screen.get_size()).convert()
         self.background.fill([0, 0, 0])
         self.overlay: Surface = Surface(self.screen.get_size()).convert_alpha()
@@ -27,6 +27,7 @@ class Game(object):
         self.slowdown_factor: float = 1
         self.slowdown_factor_max: float = 1000
         self.all_sprites: LayeredUpdates = LayeredUpdates()
+        self._game_components: list[GameComponent] = list()
 
     # Add sprites to renderer
     def add_sprites_to_render(self, sprites: list[Sprite]):
@@ -55,7 +56,7 @@ class Game(object):
         return value * self.delta_time
 
     # Image loader
-    def load_image(self, name, color_key=None, scale=1):
+    def load_image(self, name, color_key=None, scale=1) -> tuple[Surface, Rect]:
         image = pygame.image.load(os.path.join(self.data_dir, name)).convert_alpha()
         size = image.get_size()
         image = pygame.transform.scale(image, (size[0] * scale, size[1] * scale))
@@ -66,13 +67,32 @@ class Game(object):
         return image, image.get_rect()
 
     # Sound loader
-    def load_sound(self, name) -> Sound:
-        class NoneSound:
-            def play(self):
-                pass
-        if not pygame.mixer or not pygame.mixer.get_init():
+    def load_sound(self, name) -> object:
+        if not mixer_initialized:
             return NoneSound()
         return pygame.mixer.Sound(os.path.join(self.data_dir, name))
+
+    # Add game component
+    def add_game_component(self, component: GameComponent):
+        self._game_components.append(component)
+
+    # Remove game component
+    def remove_game_component(self, component_to_remove):
+        for component in self._game_components:
+            if component == component_to_remove:
+                self._game_components.remove(component)
+
+    # Remove game component by class
+    def remove_game_component_by_class(self, component_to_remove):
+        for component in self._game_components:
+            if component.__class__ == component_to_remove:
+                self._game_components.remove(component)
+
+    # Remove game component by tag
+    def remove_game_component_by_tag(self, comp_tag: str):
+        for component in self._game_components:
+            if component.comp_tags.__contains__(comp_tag):
+                self._game_components.remove(component)
 
     # Main
     def main(self):
@@ -80,6 +100,8 @@ class Game(object):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+            for component in self._game_components:
+                component.comp_update()
             self.all_sprites.update()
             self.screen.blit(self.background, (0, 0))
             self.all_sprites.draw(self.screen)
