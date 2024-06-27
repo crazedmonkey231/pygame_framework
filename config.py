@@ -36,6 +36,11 @@ def map_range(value, start1, stop1, start2, stop2):
     return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
 
 
+# Clamp value between range
+def clamp_value(value, start, stop):
+    return min(max(value, start), stop)
+
+
 # Image loader
 def load_image(self, name, color_key=None, scale=1) -> tuple[Surface, Rect]:
     image = pygame.image.load(os.path.join(data_dir, name)).convert_alpha()

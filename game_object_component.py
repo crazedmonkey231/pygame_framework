@@ -32,7 +32,7 @@ class HealthComponent(GameObjectComponent):
         self.health_update_change: float = health_update_change
 
     def update_health(self, amount: float):
-        self.health = min(max(self.health + amount, 0), self.health_max)
+        self.health = clamp_value(self.health + amount, 0, self.health_max)
         if not self.health:
             self.parent.kill()
 
@@ -108,7 +108,7 @@ class PowerTrackerComponent(GameObjectComponent):
         return self.total_power == 100
 
     def update_power(self, amount: float):
-        self.total_power = min(max(self.total_power + amount, 0), 100)
+        self.total_power = clamp_value(self.total_power + amount, 0, 100)
 
     def comp_update(self, *args, **kwargs):
         super().comp_update(*args, **kwargs)

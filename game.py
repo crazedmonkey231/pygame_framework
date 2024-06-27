@@ -92,5 +92,5 @@ class Game(object):
             self.screen.blit(self.overlay, (0, 0))
             pygame.display.flip()
             if not 1 <= self.slowdown_factor <= self.slowdown_factor_max:
-                self.slowdown_factor = min(max(self.slowdown_factor, 1), self.slowdown_factor_max)
+                self.slowdown_factor = clamp_value(self.slowdown_factor, 1, self.slowdown_factor_max)
             self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_factor
