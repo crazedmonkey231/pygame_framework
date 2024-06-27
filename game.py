@@ -54,23 +54,29 @@ class Game(object):
         if issubclass(component, GameComponent):
             self._game_components.append(component)
 
+    # Remove game component based on a validation
+    def _remove_and_destroy_component(self, validation, component):
+        needs_validation = validation if validation is not None else None
+        is_valid_comparison = validation == component if needs_validation else False
+        if (needs_validation and is_valid_comparison) or needs_validation is None:
+            self._game_components.remove(component)
+            component.comp_destroy()
+
     # Remove game component
     def remove_game_component(self, component_to_remove):
         for component in self._game_components:
-            if component == component_to_remove:
-                self._game_components.remove(component)
+            self._remove_and_destroy_component(component, component_to_remove)
 
     # Remove game component by class
     def remove_game_component_by_class(self, component_to_remove):
         for component in self._game_components:
-            if component.__class__ == component_to_remove:
-                self._game_components.remove(component)
+            self._remove_and_destroy_component(component.__class__, component_to_remove)
 
     # Remove game component by tag
     def remove_game_component_by_tag(self, comp_tag: str):
         for component in self._game_components:
             if component.comp_tags.__contains__(comp_tag):
-                self._game_components.remove(component)
+                self._remove_and_destroy_component(None, component)
 
     # Main
     def main(self):

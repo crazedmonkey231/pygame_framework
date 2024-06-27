@@ -8,3 +8,6 @@ class GameComponent(object):
 
     def comp_update(self):
         pass
+
+    def comp_destroy(self):
+        self.parent = None

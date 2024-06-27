@@ -69,10 +69,10 @@ class GameObjectWithComponents(GameObjectBase):
         else:
             self._components = components
             if not all(issubclass(type(obj), GameObjectComponent) for obj in components):
-                self._components = list([c for c in self._components if issubclass(c, GameObjectComponent)])
+                self._components: list[GameObjectComponent] = list(
+                    [c for c in self._components if issubclass(c, GameObjectComponent)])
             for component in self._components:
-                game_object_component: GameObjectComponent = component
-                game_object_component.comp_init()
+                component.comp_init()
 
     def on_destroy(self):
         super().on_destroy()
@@ -98,27 +98,26 @@ class GameObjectWithComponents(GameObjectBase):
         if issubclass(component, GameObjectComponent):
             self._components.append(component)
 
+    def _remove_and_destroy_component(self, validation, component):
+        needs_validation = validation if validation is not None else None
+        is_valid_comparison = validation == component if needs_validation else False
+        if (needs_validation and is_valid_comparison) or needs_validation is None:
+            self._components.remove(component)
+            component.comp_destroy()
+
     def remove_game_component(self, component_to_remove):
         if issubclass(component_to_remove, GameObjectComponent):
             for component in self._components:
-                game_object_component: GameObjectComponent = component
-                if game_object_component == component_to_remove:
-                    self._components.remove(game_object_component)
-                    game_object_component.comp_destroy()
+                self._remove_and_destroy_component(component, component_to_remove)
 
     def remove_game_component_by_class(self, component_to_remove):
         for component in self._components:
-            game_object_component: GameObjectComponent = component
-            if game_object_component.__class__ == component_to_remove:
-                self._components.remove(game_object_component)
-                game_object_component.comp_destroy()
+            self._remove_and_destroy_component(component.__class__, component_to_remove)
 
     def remove_game_component_by_tag(self, comp_tag: str):
         for component in self._components:
-            game_object_component: GameObjectComponent = component
-            if game_object_component.comp_tags.__contains__(comp_tag):
-                self._components.remove(game_object_component)
-                game_object_component.comp_destroy()
+            if component.comp_tags.__contains__(comp_tag):
+                self._remove_and_destroy_component(None, component)
 
     def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
         super().apply_damage(causer, damage_amount)
