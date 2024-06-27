@@ -45,6 +45,12 @@ class Game(object):
         sprites = self.all_sprites.get_sprites_from_layer(layer)
         return [(sprite, Vector2(sprite.rect.center)) for sprite in sprites]
 
+    # Get sprites with positions from render layer
+    def get_sprites_from_render_layer_within_distance(self, game_object: GameObject, distance: float = 100,
+                                                      layer: int = 0) -> list[Sprite]:
+        sprites = self.all_sprites.get_sprites_from_layer(layer)
+        return [sprite for sprite in sprites if game_object.distance_to_game_object(sprite) <= distance]
+
     # Calculate the delta of a value from the delta time
     def delta_value(self, value) -> float:
         return value * self.delta_time

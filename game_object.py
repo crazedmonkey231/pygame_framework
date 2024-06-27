@@ -40,11 +40,11 @@ class GameObject(Sprite):
     def on_un_clicked(self):
         pass
 
-    def distance_to_game_object(self, other_object: object) -> float:
-        if issubclass(other_object, GameObject):
-            other_game_object: GameObject = other_object
+    def distance_to_game_object(self, other_sprite) -> float:
+        if issubclass(other_sprite, GameObject):
+            other_game_object: GameObject = other_sprite
             return Vector2(self.rect.center).distance_to(Vector2(other_game_object.rect.center))
-        return 0
+        return -1
 
     def distance_to_position(self, target_pos: Vector2) -> float:
         return Vector2(self.rect.center).distance_to(target_pos)
