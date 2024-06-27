@@ -6,12 +6,6 @@ from config import *
 #
 class Game(object):
     def __init__(self):
-        if not pygame.font:
-            print("Warning, fonts disabled")
-        if not pygame.mixer:
-            print("Warning, sound disabled")
-        self.main_dir = os.path.split(os.path.abspath(__file__))[0]
-        self.data_dir = os.path.join(self.main_dir, 'data')
         self.pygame_init_return: tuple[int, int] = pygame.init()
         self.screen: Surface = pygame.display.set_mode((1280, 720))
         self.screen_center: tuple[float, float] = (self.screen.get_width() / 2, self.screen.get_height() / 2)
@@ -54,23 +48,6 @@ class Game(object):
     # Calculate the delta of a value from the delta time
     def delta_value(self, value) -> float:
         return value * self.delta_time
-
-    # Image loader
-    def load_image(self, name, color_key=None, scale=1) -> tuple[Surface, Rect]:
-        image = pygame.image.load(os.path.join(self.data_dir, name)).convert_alpha()
-        size = image.get_size()
-        image = pygame.transform.scale(image, (size[0] * scale, size[1] * scale))
-        if color_key is not None:
-            if color_key == -1:
-                color_key = image.get_at((0, 0))
-            image.set_colorkey(color_key, pygame.RLEACCEL)
-        return image, image.get_rect()
-
-    # Sound loader
-    def load_sound(self, name) -> object:
-        if not mixer_initialized:
-            return NoneSound()
-        return pygame.mixer.Sound(os.path.join(self.data_dir, name))
 
     # Add game component
     def add_game_component(self, component):
