@@ -73,8 +73,9 @@ class Game(object):
         return pygame.mixer.Sound(os.path.join(self.data_dir, name))
 
     # Add game component
-    def add_game_component(self, component: GameComponent):
-        self._game_components.append(component)
+    def add_game_component(self, component):
+        if issubclass(component, GameComponent):
+            self._game_components.append(component)
 
     # Remove game component
     def remove_game_component(self, component_to_remove):

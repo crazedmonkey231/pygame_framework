@@ -6,8 +6,8 @@ from config import *
 #
 class GameObjectComponent(object):
     def __init__(self, parent: GameObjectWithComponents):
-        self.parent = parent
-        self.needs_update = True
+        self.parent: GameObjectWithComponents = parent
+        self.needs_update: bool = True
         self.comp_tags: set[str] = set()
 
     def comp_init(self):
@@ -49,7 +49,7 @@ class MovementComponent(GameObjectComponent):
     def __init__(self, parent: GameObjectWithComponents, move_speed: Vector2 = Vector2(0, 0)):
         super().__init__(parent)
         self.move_speed: Vector2 = move_speed
-        self.velocity = Vector2(0, 0)
+        self.velocity: Vector2 = Vector2(0, 0)
 
     def comp_update(self, *args, **kwargs):
         super().comp_update(*args, **kwargs)
@@ -120,7 +120,7 @@ class PowerTrackerComponent(GameObjectComponent):
 class GameObjectHolder(GameObjectComponent):
     def __init__(self, parent: GameObjectWithComponents, held_game_object: GameObject):
         super().__init__(parent)
-        self.held_game_object = held_game_object
+        self.held_game_object: GameObject = held_game_object
         self.needs_update = False
 
     def comp_destroy(self):

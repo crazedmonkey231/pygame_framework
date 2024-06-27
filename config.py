@@ -5,11 +5,11 @@ from pygame.font import Font
 from pygame.mixer import Sound
 from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates
 from game import Game
+from game_component import GameComponent
 from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, Character, Player, AiPlayer, Effect,
                          Widget, NoneSound)
 from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
                                    MovementComponent)
-from game_component import GameComponent
 
 
 mixer_initialized = pygame.mixer or pygame.mixer.get_init()
