@@ -43,7 +43,7 @@ class Game(object):
     # Get sprites with positions from render layer
     def get_sprites_from_render_layer_with_pos(self, layer: int = 0) -> list[tuple[Sprite, Vector2]]:
         sprites = self.all_sprites.get_sprites_from_layer(layer)
-        return [(sprite, Vector2(sprite.rect.center[0], sprite.rect.center[1])) for sprite in sprites]
+        return [(sprite, Vector2(sprite.rect.center)) for sprite in sprites]
 
     # Calculate the delta of a value from the delta time
     def delta_value(self, value) -> float:
@@ -58,7 +58,7 @@ class Game(object):
     def _remove_and_destroy_component(self, validation, component):
         needs_validation = validation if validation is not None else False
         is_valid_comparison = validation == component if needs_validation else False
-        if (needs_validation and is_valid_comparison) or not needs_validation:
+        if not needs_validation or (needs_validation and is_valid_comparison):
             component.comp_destroy()
             self._game_components.remove(component)
 
