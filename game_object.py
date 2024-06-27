@@ -99,11 +99,11 @@ class GameObjectWithComponents(GameObjectBase):
             self._components.append(component)
 
     def _remove_and_destroy_component(self, validation, component):
-        needs_validation = validation if validation is not None else None
+        needs_validation = validation if validation is not None else False
         is_valid_comparison = validation == component if needs_validation else False
-        if (needs_validation and is_valid_comparison) or needs_validation is None:
-            self._components.remove(component)
+        if (needs_validation and is_valid_comparison) or not needs_validation:
             component.comp_destroy()
+            self._components.remove(component)
 
     def remove_game_component(self, component_to_remove):
         if issubclass(component_to_remove, GameObjectComponent):
