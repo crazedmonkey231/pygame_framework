@@ -72,7 +72,7 @@ class GameObjectWithComponents(GameObjectBase):
                 self._components: list[GameObjectComponent] = list(
                     [c for c in self._components if isinstance(c, GameObjectComponent)])
             for component in self._components:
-                component.comp_init()
+                component.comp_activate()
 
     def on_destroy(self):
         super().on_destroy()
@@ -86,26 +86,15 @@ class GameObjectWithComponents(GameObjectBase):
         for component in self._components:
             game_object_component: GameObjectComponent = component
             if game_object_component.needs_update:
-                component.comp_update(*args, **kwargs)
+                component.comp_update()
 
     def add_game_object_component(self, component):
-        from game_object_component import GameObjectComponent
-        if component:
-            if isinstance(component, GameObjectComponent):
-                self._components.append(component)
-            if issubclass(component, GameObjectComponent):
-                self._components.append(component(self))
+        from game_object_components import GameObjectComponent
+        add_component(GameObjectComponent, self._components, component, self)
 
     def remove_game_object_component(self, component, optional_tags: set[str] = None):
-        from game_object_component import GameObjectComponent
-        if component or optional_tags:
-            for goc in self._components:
-                f1 = (component and ((isinstance(component, GameObjectComponent) and goc == component) or
-                                     (issubclass(component, GameObjectComponent) and goc.__class__ == component)))
-                f2 = optional_tags and bool(goc.comp_tags & optional_tags)
-                if f1 or f2:
-                    goc.comp_destroy()
-                    self._components.remove(goc)
+        from game_object_components import GameObjectComponent
+        remove_component(GameObjectComponent, self._components, component, optional_tags)
 
     def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
         super().apply_damage(causer, damage_amount)
@@ -237,12 +226,3 @@ class ProgressBar(Widget):
     def update(self, *args, **kwargs):
         pass
 
-
-# ----------------------------------------------------------------------------------------------------------------------
-
-#
-# Sound
-#
-class NoneSound(object):
-    def play(self):
-        pass

@@ -13,44 +13,38 @@ class Level(object):
     # On load
     def on_load(self):
         for component in self._level_components:
-            component.comp_on_load()
+            component.comp_activate()
 
     # On unload
     def on_unload(self):
         for component in self._level_components:
-            component.comp_on_unload()
+            component.comp_deactivate()
+
+    def reset_level(self):
+        for component in self._level_components:
+            component.comp_reset()
 
     # Update all sprites
     def update_level(self):
         for component in self._level_components:
-            if component.needs_update:
-                component.comp_update()
+            component.comp_update()
         self._all_sprites.update()
 
     # Draw all sprites
     def draw_level(self):
+        for component in self._level_components:
+            component.comp_draw()
         self._all_sprites.draw(self.parent.screen)
 
     # Add level component
     def add_level_component(self, component):
-        from level_component import LevelComponent
-        if component:
-            if isinstance(component, LevelComponent):
-                self._level_components.append(component)
-            if issubclass(component, LevelComponent):
-                self._level_components.append(component(self))
+        from component import LevelComponent
+        add_component(LevelComponent, self._level_components, component, self)
 
     # Remove level component
     def remove_level_component(self, component, optional_tags: set[str] = None):
-        from level_component import LevelComponent
-        if component or optional_tags:
-            for lc in self._level_components:
-                f1 = (component and ((isinstance(component, LevelComponent) and lc == component) or
-                                     (issubclass(component, LevelComponent) and lc.__class__ == component)))
-                f2 = optional_tags and bool(lc.comp_tags & optional_tags)
-                if f1 or f2:
-                    lc.comp_destroy()
-                    self._level_components.remove(lc)
+        from component import LevelComponent
+        remove_component(LevelComponent, self._level_components, component, optional_tags)
 
     # Add sprites to renderer
     def add_sprites_to_render(self, sprites: list[Sprite]):

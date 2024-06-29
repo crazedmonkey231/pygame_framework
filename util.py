@@ -26,12 +26,8 @@ def load_image(name, color_key=None, scale=1) -> tuple[Surface, Rect]:
 # Sound loader
 def load_sound(name) -> object:
     if not mixer_initialized:
+        class NoneSound(object):
+            def play(self):
+                pass
         return NoneSound()
     return pygame.mixer.Sound(os.path.join(data_dir, name))
-
-
-def get_component_by_class(comp_list, comp_class):
-    for component in comp_list:
-        if component.__class__ == comp_class:
-            return component
-    return None

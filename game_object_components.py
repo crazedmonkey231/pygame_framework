@@ -2,25 +2,6 @@ from config import *
 
 
 #
-# Game Object Component
-#
-class GameObjectComponent(object):
-    def __init__(self, parent: GameObjectWithComponents):
-        self.parent: GameObjectWithComponents = parent
-        self.needs_update: bool = True
-        self.comp_tags: set[str] = set()
-
-    def comp_init(self):
-        pass
-
-    def comp_update(self, *args, **kwargs):
-        pass
-
-    def comp_destroy(self):
-        self.parent = None
-
-
-#
 # Health Component
 #
 class HealthComponent(GameObjectComponent):
@@ -36,8 +17,8 @@ class HealthComponent(GameObjectComponent):
         if not self.health:
             self.parent.kill()
 
-    def comp_update(self, *args, **kwargs):
-        super().comp_update(*args, **kwargs)
+    def comp_update(self):
+        super().comp_update()
         if not self.health_update_change != 0:
             self.update_health(self.health_update_change)
 
@@ -51,8 +32,8 @@ class MovementComponent(GameObjectComponent):
         self.move_speed: Vector2 = move_speed
         self.velocity: Vector2 = Vector2(0, 0)
 
-    def comp_update(self, *args, **kwargs):
-        super().comp_update(*args, **kwargs)
+    def comp_update(self):
+        super().comp_update()
         rect = self.parent.rect
         center = rect.center
         center_x = center[0] + game.delta_value(self.move_speed.x)
@@ -87,8 +68,8 @@ class CountDownComponent(GameObjectComponent):
         self.countdown_active = False
         self.needs_update = False
 
-    def comp_update(self, *args, **kwargs):
-        super().comp_update(*args, **kwargs)
+    def comp_update(self,):
+        super().comp_update()
         if self.countdown_active:
             self.time_to_live -= game.delta_time
             if 0 >= self.time_to_live:
@@ -110,8 +91,8 @@ class PowerTrackerComponent(GameObjectComponent):
     def update_power(self, amount: float):
         self.total_power = clamp_value(self.total_power + amount, 0, 100)
 
-    def comp_update(self, *args, **kwargs):
-        super().comp_update(*args, **kwargs)
+    def comp_update(self):
+        super().comp_update()
 
 
 #

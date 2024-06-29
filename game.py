@@ -29,25 +29,13 @@ class Game(object):
 
     # Add game component
     def add_game_component(self, component):
-        from game_component import GameComponent
-        if component:
-            if isinstance(component, GameComponent):
-                self._game_components.append(component)
-            if issubclass(component, GameComponent):
-                game_component: GameComponent = component(self)
-                self._game_components.append(game_component)
+        from component import GameComponent
+        add_component(GameComponent, self._game_components, component, self)
 
     # Remove game component
     def remove_game_component(self, component, optional_tags: set[str] = None):
-        from game_component import GameComponent
-        if component or optional_tags:
-            for gc in self._game_components:
-                f1 = (component and ((isinstance(component, GameComponent) and gc == component) or
-                                     (issubclass(component, GameComponent) and gc.__class__ == component)))
-                f2 = optional_tags and bool(gc.comp_tags & optional_tags)
-                if f1 or f2:
-                    gc.comp_destroy()
-                    self._game_components.remove(gc)
+        from component import GameComponent
+        remove_component(GameComponent, self._game_components, component, optional_tags)
 
     def load_level(self, level):
         from level import Level

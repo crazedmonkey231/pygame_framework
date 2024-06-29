@@ -4,15 +4,16 @@ from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
 from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates
-from util import map_range, clamp_value, load_image, load_sound, get_component_by_class
+from util import map_range, clamp_value, load_image, load_sound
+from component import add_component, remove_component, get_component_by_class
 from game import Game
-from game_component import GameComponent
-from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, Character, Player, AiPlayer, Effect,
-                         Widget, NoneSound)
-from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
-                                   MovementComponent, GameObjectHolder)
+from component import Component, GameComponent
+from game_object import GameObject, GameObjectBase, GameObjectWithComponents
+from component import GameObjectComponent
+from game_object_components import HealthComponent, MovementComponent, CountDownComponent
 from level import Level
-from level_component import LevelComponent
+from component import LevelComponent
+
 
 if not pygame.font:
     print("Warning, fonts disabled")
@@ -38,4 +39,7 @@ render_layer_top: int = 3
 game: Game = Game()
 game.load_level(Level)
 game.level.add_level_component(LevelComponent)
+print(len(game.level._level_components))
+game.level.remove_level_component(LevelComponent)
+print(len(game.level._level_components))
 
