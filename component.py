@@ -70,7 +70,10 @@ def get_components_by_class(component_list: list[Component], component_class: ty
 
 
 def get_component_by_class(component_list: list[Component], component_class: type) -> Component:
-    return get_components_by_class(component_list, component_class)[0]
+    comps = get_components_by_class(component_list, component_class)
+    if comps:
+        return get_components_by_class(component_list, component_class)[0]
+    return None
 
 
 def add_component(comp_type: type, comp_list: list[Component], component: Component | type, parent: object):
