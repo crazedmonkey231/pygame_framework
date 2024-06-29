@@ -35,5 +35,5 @@ render_layer_top: int = 2
 
 # Main game object
 game: Game = Game()
-game.load_level(Level)
+game.load_level_by_class(Level)
 

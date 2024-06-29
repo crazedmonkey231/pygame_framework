@@ -61,11 +61,19 @@ class Game(object):
                 component.comp_destroy()
                 self._game_components.remove(component)
 
-    def load_level(self, level_class):
-        if self.level:
-            self.level.on_unload()
-        self.level: Level = level_class(self)
-        self.level.on_load()
+    def load_level(self, level):
+        if isinstance(level, Level):
+            if self.level:
+                self.level.on_unload()
+            self.level: Level = level
+            self.level.on_load()
+
+    def load_level_by_class(self, level_class):
+        if issubclass(level_class, Level):
+            if self.level:
+                self.level.on_unload()
+            self.level: Level = level_class(self)
+            self.level.on_load()
 
     # Main
     def main(self):
