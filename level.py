@@ -33,11 +33,13 @@ class Level(object):
 
     # Add level component
     def add_level_component(self, component):
+        from level_component import LevelComponent
         if isinstance(component, LevelComponent):
             self._level_components.append(component)
 
     # Add level component
     def add_level_component_by_class(self, component):
+        from level_component import LevelComponent
         if issubclass(component, LevelComponent):
             self._level_components.append(component(self))
 

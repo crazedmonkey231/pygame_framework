@@ -8,7 +8,7 @@ class GameObject(Sprite):
     def __init__(self, parent=None):
         Sprite.__init__(self)
         self.on_init()
-        self.parent: GameObject = parent if issubclass(parent, GameObject) else None
+        self.parent: GameObject = parent if isinstance(parent, GameObject) else None
         self._layer: int = render_layer_default
         self.tags: set[str] = set()
         self.half_height = self.rect.height / 2 if self.rect else 0
@@ -89,10 +89,12 @@ class GameObjectWithComponents(GameObjectBase):
                 component.comp_update(*args, **kwargs)
 
     def add_game_object_component(self, component):
+        from game_object_component import GameObjectComponent
         if isinstance(component, GameObjectComponent):
             self._components.append(component)
 
     def add_game_object_component_by_class(self, component):
+        from game_object_component import GameObjectComponent
         if issubclass(component, GameObjectComponent):
             self._components.append(component(self))
 
@@ -116,7 +118,7 @@ class GameObjectWithComponents(GameObjectBase):
 
     def apply_damage(self, causer: Sprite = None, damage_amount: float = 0):
         super().apply_damage(causer, damage_amount)
-        health_component: HealthComponent = self.get_component_by_class(HealthComponent)
+        health_component: HealthComponent = get_component_by_class(self._components, HealthComponent)
         if health_component:
             health_component.update_health(damage_amount)
 

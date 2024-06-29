@@ -4,7 +4,7 @@ from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
 from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates
-from util import map_range, clamp_value, load_image, load_sound
+from util import map_range, clamp_value, load_image, load_sound, get_component_by_class
 from game import Game
 from game_component import GameComponent
 from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, Character, Player, AiPlayer, Effect,
@@ -36,4 +36,5 @@ render_layer_top: int = 2
 # Main game object
 game: Game = Game()
 game.load_level_by_class(Level)
+game.level.add_level_component_by_class(LevelComponent)
 

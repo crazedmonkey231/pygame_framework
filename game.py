@@ -62,6 +62,7 @@ class Game(object):
                 self._game_components.remove(component)
 
     def load_level(self, level):
+        from level import Level
         if isinstance(level, Level):
             if self.level:
                 self.level.on_unload()
@@ -69,6 +70,7 @@ class Game(object):
             self.level.on_load()
 
     def load_level_by_class(self, level_class):
+        from level import Level
         if issubclass(level_class, Level):
             if self.level:
                 self.level.on_unload()

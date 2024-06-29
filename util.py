@@ -12,7 +12,7 @@ def clamp_value(value, start, stop):
 
 
 # Image loader
-def load_image(self, name, color_key=None, scale=1) -> tuple[Surface, Rect]:
+def load_image(name, color_key=None, scale=1) -> tuple[Surface, Rect]:
     image = pygame.image.load(os.path.join(data_dir, name)).convert_alpha()
     size = image.get_size()
     image = pygame.transform.scale(image, (size[0] * scale, size[1] * scale))
@@ -24,7 +24,7 @@ def load_image(self, name, color_key=None, scale=1) -> tuple[Surface, Rect]:
 
 
 # Sound loader
-def load_sound(self, name) -> object:
+def load_sound(name) -> object:
     if not mixer_initialized:
         return NoneSound()
     return pygame.mixer.Sound(os.path.join(data_dir, name))
