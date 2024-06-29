@@ -30,8 +30,9 @@ config_health_max: float = 999999
 
 # Render layers
 render_layer_default: int = 0
-render_layer_middle: int = 1
-render_layer_top: int = 2
+render_layer_bottom: int = 1
+render_layer_middle: int = 2
+render_layer_top: int = 3
 
 # Main game object
 game: Game = Game()
