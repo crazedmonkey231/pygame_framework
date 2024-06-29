@@ -20,36 +20,8 @@ class Game(object):
         self.delta_time: float = 0
         self.slowdown_factor: float = 1
         self.slowdown_factor_max: float = 1000
-        self.all_sprites: LayeredUpdates = LayeredUpdates()
+        self.level: Level = Level()
         self._game_components: list[GameComponent] = list()
-
-    # Add sprites to renderer
-    def add_sprites_to_render(self, sprites: list[Sprite]):
-        for sprite in sprites:
-            self.all_sprites.add(sprite)
-
-    # Add sprites to renderer with positions
-    def add_sprites_to_render_with_pos(self, sprites_list: list[tuple[Sprite, Vector2]]):
-        for item in sprites_list:
-            sprite, pos = item
-            if sprite.rect:
-                sprite.rect.center = (pos.x, pos.y)
-            self.all_sprites.add(sprite)
-
-    # Get sprites from render layer
-    def get_sprites_from_render_layer(self, layer: int = 0) -> list[Sprite]:
-        return self.all_sprites.get_sprites_from_layer(layer)
-
-    # Get sprites with positions from render layer
-    def get_sprites_from_render_layer_with_pos(self, layer: int = 0) -> list[tuple[Sprite, Vector2]]:
-        sprites = self.all_sprites.get_sprites_from_layer(layer)
-        return [(sprite, Vector2(sprite.rect.center)) for sprite in sprites]
-
-    # Get sprites with positions from render layer
-    def get_sprites_from_render_layer_within_distance(self, game_object: GameObject, distance: float = 100,
-                                                      layer: int = 0) -> list[Sprite]:
-        sprites = self.all_sprites.get_sprites_from_layer(layer)
-        return [sprite for sprite in sprites if game_object.distance_to_game_object(sprite) <= distance]
 
     # Calculate the delta of a value from the delta time
     def delta_value(self, value) -> float:
@@ -84,6 +56,12 @@ class Game(object):
             if component.comp_tags.__contains__(comp_tag):
                 self._remove_and_destroy_component(None, component)
 
+    def load_level(self, level_class):
+        if self.level:
+            self.level.on_unload()
+        self.level = level_class()
+        self.level.on_load()
+
     # Main
     def main(self):
         while self.running:
@@ -91,12 +69,13 @@ class Game(object):
                 if event.type == pygame.QUIT:
                     self.running = False
             for component in self._game_components:
-                component.comp_update()
-            self.all_sprites.update()
+                if component.needs_update:
+                    component.comp_update()
+            self.level.update_level()
             self.screen.blit(self.background, (0, 0))
-            self.all_sprites.draw(self.screen)
+            self.level.draw_level()
             self.screen.blit(self.overlay, (0, 0))
             pygame.display.flip()
-            if not 1 <= self.slowdown_factor <= self.slowdown_factor_max:
+            if self.slowdown_factor_max < self.slowdown_factor or self.slowdown_factor < 1:
                 self.slowdown_factor = clamp_value(self.slowdown_factor, 1, self.slowdown_factor_max)
             self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_factor
