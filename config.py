@@ -12,6 +12,7 @@ from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, C
 from game_object_component import (GameObjectComponent, HealthComponent, PowerTrackerComponent, CountDownComponent,
                                    MovementComponent, GameObjectHolder)
 from level import Level
+from level_component import LevelComponent
 
 if not pygame.font:
     print("Warning, fonts disabled")
@@ -34,3 +35,5 @@ render_layer_top: int = 2
 
 # Main game object
 game: Game = Game()
+game.load_level(Level)
+

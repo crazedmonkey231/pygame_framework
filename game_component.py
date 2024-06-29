@@ -4,7 +4,7 @@ from config import *
 class GameComponent(object):
     def __init__(self, parent: Game):
         self.parent: Game = parent
-        self.needs_update = True
+        self.needs_update: bool = True
         self.comp_tags: set[str] = set()
 
     def comp_update(self):

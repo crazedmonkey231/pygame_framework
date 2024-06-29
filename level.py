@@ -1,25 +1,66 @@
 from config import *
 
 
+#
+# Level
+#
 class Level(object):
-    def __init__(self):
+    def __init__(self, parent: Game):
+        self.parent: Game = parent
         self._all_sprites: LayeredUpdates = LayeredUpdates()
+        self._level_components: list[LevelComponent] = list()
 
     # On load
     def on_load(self):
-        pass
+        for component in self._level_components:
+            component.comp_on_load()
 
     # On unload
     def on_unload(self):
-        pass
+        for component in self._level_components:
+            component.comp_on_unload()
 
     # Update all sprites
     def update_level(self):
+        for component in self._level_components:
+            if component.needs_update:
+                component.comp_update()
         self._all_sprites.update()
 
     # Draw all sprites
     def draw_level(self):
-        self._all_sprites.draw(game.screen)
+        self._all_sprites.draw(self.parent.screen)
+
+    # Add level component
+    def add_level_component(self, component):
+        if isinstance(component, LevelComponent):
+            self._level_components.append(component)
+
+    # Add level component
+    def add_level_component_by_class(self, component):
+        if issubclass(component, LevelComponent):
+            self._level_components.append(component(self))
+
+    # Remove level component
+    def remove_level_component(self, component_to_remove):
+        for component in self._level_components:
+            if component == component_to_remove:
+                component.comp_destroy()
+                self._level_components.remove(component)
+
+    # Remove level component by class
+    def remove_level_component_by_class(self, component_to_remove):
+        for component in self._level_components:
+            if component.__class__ == component_to_remove:
+                component.comp_destroy()
+                self._level_components.remove(component)
+
+    # Remove level component by tag
+    def remove_level_component_by_tag(self, comp_tag: str):
+        for component in self._level_components:
+            if component.comp_tags.__contains__(comp_tag):
+                component.comp_destroy()
+                self._level_components.remove(component)
 
     # Add sprites to renderer
     def add_sprites_to_render(self, sprites: list[Sprite]):

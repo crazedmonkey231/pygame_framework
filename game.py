@@ -20,7 +20,7 @@ class Game(object):
         self.delta_time: float = 0
         self.slowdown_factor: float = 1
         self.slowdown_factor_max: float = 1000
-        self.level: Level = Level()
+        self.level: Level = None
         self._game_components: list[GameComponent] = list()
 
     # Calculate the delta of a value from the delta time
@@ -29,37 +29,42 @@ class Game(object):
 
     # Add game component
     def add_game_component(self, component):
-        if issubclass(component, GameComponent):
+        from game_component import GameComponent
+        if isinstance(component, GameComponent):
             self._game_components.append(component)
 
-    # Remove game component based on a validation
-    def _remove_and_destroy_component(self, validation, component):
-        needs_validation = validation if validation is not None else False
-        is_valid_comparison = validation == component if needs_validation else False
-        if not needs_validation or (needs_validation and is_valid_comparison):
-            component.comp_destroy()
-            self._game_components.remove(component)
+    # Add game component
+    def add_game_component_by_class(self, component_class):
+        from game_component import GameComponent
+        if issubclass(component_class, GameComponent):
+            game_component: GameComponent = component_class(self)
+            self._game_components.append(game_component)
 
     # Remove game component
     def remove_game_component(self, component_to_remove):
         for component in self._game_components:
-            self._remove_and_destroy_component(component, component_to_remove)
+            if component == component_to_remove:
+                component.comp_destroy()
+                self._game_components.remove(component)
 
     # Remove game component by class
     def remove_game_component_by_class(self, component_to_remove):
         for component in self._game_components:
-            self._remove_and_destroy_component(component.__class__, component_to_remove)
+            if component.__class__ == component_to_remove:
+                component.comp_destroy()
+                self._game_components.remove(component)
 
     # Remove game component by tag
     def remove_game_component_by_tag(self, comp_tag: str):
         for component in self._game_components:
             if component.comp_tags.__contains__(comp_tag):
-                self._remove_and_destroy_component(None, component)
+                component.comp_destroy()
+                self._game_components.remove(component)
 
     def load_level(self, level_class):
         if self.level:
             self.level.on_unload()
-        self.level = level_class()
+        self.level: Level = level_class(self)
         self.level.on_load()
 
     # Main
@@ -71,9 +76,11 @@ class Game(object):
             for component in self._game_components:
                 if component.needs_update:
                     component.comp_update()
-            self.level.update_level()
+            if self.level:
+                self.level.update_level()
             self.screen.blit(self.background, (0, 0))
-            self.level.draw_level()
+            if self.level:
+                self.level.draw_level()
             self.screen.blit(self.overlay, (0, 0))
             pygame.display.flip()
             if self.slowdown_factor_max < self.slowdown_factor or self.slowdown_factor < 1:

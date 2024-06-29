@@ -28,3 +28,10 @@ def load_sound(self, name) -> object:
     if not mixer_initialized:
         return NoneSound()
     return pygame.mixer.Sound(os.path.join(data_dir, name))
+
+
+def get_component_by_class(comp_list, comp_class):
+    for component in comp_list:
+        if component.__class__ == comp_class:
+            return component
+    return None
