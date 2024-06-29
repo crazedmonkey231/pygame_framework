@@ -43,9 +43,10 @@ class Game(object):
             self.level.on_unload()
         if isinstance(level, Level):
             self.level: Level = level
-        if issubclass(level, Level):
+        elif isinstance(level, type) and issubclass(level, Level):
             self.level: Level = level(self)
-        self.level.on_load()
+        if self.level:
+            self.level.on_load()
 
     # Main
     def main(self):
