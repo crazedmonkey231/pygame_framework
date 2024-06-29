@@ -30,52 +30,34 @@ class Game(object):
     # Add game component
     def add_game_component(self, component):
         from game_component import GameComponent
-        if isinstance(component, GameComponent):
-            self._game_components.append(component)
-
-    # Add game component
-    def add_game_component_by_class(self, component_class):
-        from game_component import GameComponent
-        if issubclass(component_class, GameComponent):
-            game_component: GameComponent = component_class(self)
-            self._game_components.append(game_component)
+        if component:
+            if isinstance(component, GameComponent):
+                self._game_components.append(component)
+            if issubclass(component, GameComponent):
+                game_component: GameComponent = component(self)
+                self._game_components.append(game_component)
 
     # Remove game component
-    def remove_game_component(self, component_to_remove):
-        for component in self._game_components:
-            if component == component_to_remove:
-                component.comp_destroy()
-                self._game_components.remove(component)
-
-    # Remove game component by class
-    def remove_game_component_by_class(self, component_to_remove):
-        for component in self._game_components:
-            if component.__class__ == component_to_remove:
-                component.comp_destroy()
-                self._game_components.remove(component)
-
-    # Remove game component by tag
-    def remove_game_component_by_tag(self, comp_tag: str):
-        for component in self._game_components:
-            if component.comp_tags.__contains__(comp_tag):
-                component.comp_destroy()
-                self._game_components.remove(component)
+    def remove_game_component(self, component, optional_tags: set[str] = None):
+        from game_component import GameComponent
+        if component or optional_tags:
+            for gc in self._game_components:
+                f1 = (component and ((isinstance(component, GameComponent) and gc == component) or
+                                     (issubclass(component, GameComponent) and gc.__class__ == component)))
+                f2 = optional_tags and bool(gc.comp_tags & optional_tags)
+                if f1 or f2:
+                    gc.comp_destroy()
+                    self._game_components.remove(gc)
 
     def load_level(self, level):
         from level import Level
+        if self.level:
+            self.level.on_unload()
         if isinstance(level, Level):
-            if self.level:
-                self.level.on_unload()
             self.level: Level = level
-            self.level.on_load()
-
-    def load_level_by_class(self, level_class):
-        from level import Level
-        if issubclass(level_class, Level):
-            if self.level:
-                self.level.on_unload()
-            self.level: Level = level_class(self)
-            self.level.on_load()
+        if issubclass(level, Level):
+            self.level: Level = level(self)
+        self.level.on_load()
 
     # Main
     def main(self):
@@ -88,11 +70,10 @@ class Game(object):
                     component.comp_update()
             if self.level:
                 self.level.update_level()
-            self.screen.blit(self.background, (0, 0))
-            if self.level:
+                self.screen.blit(self.background, (0, 0))
                 self.level.draw_level()
-            self.screen.blit(self.overlay, (0, 0))
-            pygame.display.flip()
+                self.screen.blit(self.overlay, (0, 0))
+                pygame.display.flip()
             if self.slowdown_factor_max < self.slowdown_factor or self.slowdown_factor < 1:
                 self.slowdown_factor = clamp_value(self.slowdown_factor, 1, self.slowdown_factor_max)
             self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_factor

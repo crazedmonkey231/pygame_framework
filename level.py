@@ -34,35 +34,23 @@ class Level(object):
     # Add level component
     def add_level_component(self, component):
         from level_component import LevelComponent
-        if isinstance(component, LevelComponent):
-            self._level_components.append(component)
-
-    # Add level component
-    def add_level_component_by_class(self, component):
-        from level_component import LevelComponent
-        if issubclass(component, LevelComponent):
-            self._level_components.append(component(self))
+        if component:
+            if isinstance(component, LevelComponent):
+                self._level_components.append(component)
+            if issubclass(component, LevelComponent):
+                self._level_components.append(component(self))
 
     # Remove level component
-    def remove_level_component(self, component_to_remove):
-        for component in self._level_components:
-            if component == component_to_remove:
-                component.comp_destroy()
-                self._level_components.remove(component)
-
-    # Remove level component by class
-    def remove_level_component_by_class(self, component_to_remove):
-        for component in self._level_components:
-            if component.__class__ == component_to_remove:
-                component.comp_destroy()
-                self._level_components.remove(component)
-
-    # Remove level component by tag
-    def remove_level_component_by_tag(self, comp_tag: str):
-        for component in self._level_components:
-            if component.comp_tags.__contains__(comp_tag):
-                component.comp_destroy()
-                self._level_components.remove(component)
+    def remove_level_component(self, component, optional_tags: set[str] = None):
+        from level_component import LevelComponent
+        if component or optional_tags:
+            for lc in self._level_components:
+                f1 = (component and ((isinstance(component, LevelComponent) and lc == component) or
+                                     (issubclass(component, LevelComponent) and lc.__class__ == component)))
+                f2 = optional_tags and bool(lc.comp_tags & optional_tags)
+                if f1 or f2:
+                    lc.comp_destroy()
+                    self._level_components.remove(lc)
 
     # Add sprites to renderer
     def add_sprites_to_render(self, sprites: list[Sprite]):
