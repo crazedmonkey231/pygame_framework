@@ -55,9 +55,7 @@ class Game(object):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-            for component in self._game_components:
-                if component.needs_update:
-                    component.comp_update()
+            update_components(self._game_components)
             if self.level:
                 self.level.update()
                 self.screen.blit(self.background, (0, 0))

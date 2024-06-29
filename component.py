@@ -8,6 +8,7 @@ class Component(object):
     def __init__(self, parent):
         self.parent = parent
         self.needs_update: bool = True
+        self.needs_draw: bool = False
         self.comp_tags: set[str] = set()
 
     def comp_activate(self):
@@ -119,12 +120,14 @@ def deactivate_components(comp_list: list[Component]):
 
 def update_components(comp_list: list[Component]):
     for comp in comp_list:
-        comp.comp_update()
+        if comp.needs_update:
+            comp.comp_update()
 
 
 def draw_components(comp_list: list[Component]):
     for comp in comp_list:
-        comp.comp_draw()
+        if comp.needs_draw:
+            comp.comp_draw()
 
 
 def reset_components(comp_list: list[Component]):
