@@ -91,7 +91,8 @@ def add_component(comp_type: type, comp_list: list[Component], component: Compon
             comp.comp_activate()
 
 
-def remove_component(comp_type: type, comp_list: list[Component], component: Component | type, optional_tags: set[str] = None):
+def remove_component(comp_type: type, comp_list: list[Component], component: Component | type,
+                     optional_tags: set[str] = None):
     is_instance_of_comp = isinstance(component, comp_type)
     is_type_of_comp = isinstance(component, type) and issubclass(component, comp_type)
     is_valid = is_instance_of_comp or is_type_of_comp
@@ -104,3 +105,33 @@ def remove_component(comp_type: type, comp_list: list[Component], component: Com
                 comp.comp_deactivate()
                 comp.comp_destroy()
                 comp_list.remove(comp)
+
+
+def update_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_update()
+
+
+def activate_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_activate()
+
+
+def deactivate_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_deactivate()
+
+
+def reset_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_reset()
+
+
+def draw_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_draw()
+
+
+def destroy_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_destroy()

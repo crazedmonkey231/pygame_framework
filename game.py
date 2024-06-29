@@ -40,13 +40,14 @@ class Game(object):
     def load_level(self, level):
         from level import Level
         if self.level:
-            self.level.on_unload()
+            self.level.unload()
+            self.level.destroy()
         if isinstance(level, Level):
             self.level: Level = level
         elif isinstance(level, type) and issubclass(level, Level):
             self.level: Level = level(self)
         if self.level:
-            self.level.on_load()
+            self.level.load()
 
     # Main
     def main(self):
@@ -58,9 +59,9 @@ class Game(object):
                 if component.needs_update:
                     component.comp_update()
             if self.level:
-                self.level.update_level()
+                self.level.update()
                 self.screen.blit(self.background, (0, 0))
-                self.level.draw_level()
+                self.level.draw()
                 self.screen.blit(self.overlay, (0, 0))
                 pygame.display.flip()
             if self.slowdown_factor_max < self.slowdown_factor or self.slowdown_factor < 1:

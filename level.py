@@ -11,29 +11,27 @@ class Level(object):
         self._level_components: list[LevelComponent] = list()
 
     # On load
-    def on_load(self):
-        for component in self._level_components:
-            component.comp_activate()
+    def load(self):
+        activate_components(self._level_components)
 
     # On unload
-    def on_unload(self):
-        for component in self._level_components:
-            component.comp_deactivate()
+    def unload(self):
+        deactivate_components(self._level_components)
 
-    def reset_level(self):
-        for component in self._level_components:
-            component.comp_reset()
+    def destroy(self):
+        destroy_components(self._level_components)
+
+    def reset(self):
+        reset_components(self._level_components)
 
     # Update all sprites
-    def update_level(self):
-        for component in self._level_components:
-            component.comp_update()
+    def update(self):
+        update_components(self._level_components)
         self._all_sprites.update()
 
     # Draw all sprites
-    def draw_level(self):
-        for component in self._level_components:
-            component.comp_draw()
+    def draw(self):
+        draw_components(self._level_components)
         self._all_sprites.draw(self.parent.screen)
 
     # Add level component

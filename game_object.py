@@ -71,22 +71,17 @@ class GameObjectWithComponents(GameObjectBase):
             if not all(issubclass(type(obj), GameObjectComponent) for obj in components):
                 self._components: list[GameObjectComponent] = list(
                     [c for c in self._components if isinstance(c, GameObjectComponent)])
-            for component in self._components:
-                component.comp_activate()
+            activate_components(self._components)
 
     def on_destroy(self):
         super().on_destroy()
-        for component in self._components:
-            game_object_component: GameObjectComponent = component
-            game_object_component.comp_destroy()
+        deactivate_components(self._components)
+        destroy_components(self._components)
         self._components.clear()
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
-        for component in self._components:
-            game_object_component: GameObjectComponent = component
-            if game_object_component.needs_update:
-                component.comp_update()
+        update_components(self._components)
 
     def add_game_object_component(self, component):
         from game_object_components import GameObjectComponent
