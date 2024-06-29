@@ -107,11 +107,6 @@ def remove_component(comp_type: type, comp_list: list[Component], component: Com
                 comp_list.remove(comp)
 
 
-def update_components(comp_list: list[Component]):
-    for comp in comp_list:
-        comp.comp_update()
-
-
 def activate_components(comp_list: list[Component]):
     for comp in comp_list:
         comp.comp_activate()
@@ -122,14 +117,19 @@ def deactivate_components(comp_list: list[Component]):
         comp.comp_deactivate()
 
 
-def reset_components(comp_list: list[Component]):
+def update_components(comp_list: list[Component]):
     for comp in comp_list:
-        comp.comp_reset()
+        comp.comp_update()
 
 
 def draw_components(comp_list: list[Component]):
     for comp in comp_list:
         comp.comp_draw()
+
+
+def reset_components(comp_list: list[Component]):
+    for comp in comp_list:
+        comp.comp_reset()
 
 
 def destroy_components(comp_list: list[Component]):
