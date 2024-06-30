@@ -9,7 +9,7 @@ from config import *
 class GridLevelComponent(LevelComponent):
     def __init__(self, parent):
         super().__init__(parent)
-        self.tile_size: int = 24
+        self.tile_size: int = 16
         self.tile_size_half: float = self.tile_size / 2
         self.tile_size_vector2 = Vector2(self.tile_size, self.tile_size)
         self.num_tiles_x: int = int(self.parent.parent.screen_size_vector2.x // self.tile_size)

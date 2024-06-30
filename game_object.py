@@ -144,9 +144,13 @@ class GridSlotGameObject(GameObjectWithComponents):
 
     def on_init(self):
         super().on_init()
-        self.background_surface = Surface((self.size.x, self.size.y))
+        self.background_surface = Surface((self.size.x, self.size.y)).convert_alpha()
+        self.foreground_surface = Surface((self.size.x, self.size.y)).convert_alpha()
+        self.overlay_surface = Surface((self.size.x, self.size.y)).convert_alpha()
         self.background_color = (255, 255, 255, 255)
-        self.background_surface.fill(self.background_color)
+        self.foreground_color = (0, 0, 0, 0)
+        self.overlay_color = (0, 0, 0, 0)
+
 
 
 # ----------------------------------------------------------------------------------------------------------------------
