@@ -62,16 +62,9 @@ class GameObjectBase(GameObject):
 # Game Object With Components
 #
 class GameObjectWithComponents(GameObjectBase):
-    def __init__(self, parent: GameObject = None, components: list = None):
+    def __init__(self, parent: GameObject = None):
         super().__init__(parent)
-        if components is None:
-            self._components: list[GameObjectComponent] = list()
-        else:
-            self._components = components
-            if not all(issubclass(type(obj), GameObjectComponent) for obj in components):
-                self._components: list[GameObjectComponent] = list(
-                    [c for c in self._components if isinstance(c, GameObjectComponent)])
-            activate_components(self._components)
+        self._components: list[GameObjectComponent] = list()
 
     def on_destroy(self):
         super().on_destroy()
