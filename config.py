@@ -16,7 +16,7 @@ from component import GameObjectComponent
 from game_object_components import HealthComponent, MovementComponent, CountDownComponent
 from level import Level
 from component import LevelComponent
-from level_components import GridLevelComponent, DiscoGridLevelComponent
+from level_components import GridLevelComponent, DiscoGridLevelComponent, LightGridLevelComponent
 
 
 pygame.init()

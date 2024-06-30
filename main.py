@@ -3,6 +3,7 @@ from config import *
 # Configuration
 level: Level = Level(game)
 level.add_level_component(DiscoGridLevelComponent)
+level.add_level_component(LightGridLevelComponent)
 game.load_level(level)
 
 # Initialize game
