@@ -59,6 +59,7 @@ class Game(object):
             if self.level:
                 self.level.update()
                 self.screen.blit(self.background, (0, 0))
+                draw_components(self._game_components)
                 self.level.draw()
                 self.screen.blit(self.overlay, (0, 0))
                 pygame.display.flip()
