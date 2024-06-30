@@ -5,7 +5,7 @@ import random
 from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
-from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates
+from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates, Group
 from util import map_range, clamp_value, load_image, load_sound
 from component import (add_component, remove_component, get_component_by_class, update_components, activate_components,
                        deactivate_components, draw_components, reset_components, destroy_components)

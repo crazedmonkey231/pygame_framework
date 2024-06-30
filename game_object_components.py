@@ -98,11 +98,39 @@ class PowerTrackerComponent(GameObjectComponent):
 # Game Object Holder Component
 #
 class GameObjectHolder(GameObjectComponent):
-    def __init__(self, parent, held_game_object: object):
+    def __init__(self, parent, held_game_object):
         super().__init__(parent)
-        self.held_game_object: GameObject = held_game_object
+        self.held_game_object: GameObject = held_game_object if isinstance(held_game_object, GameObject) else None
         self.needs_update = False
+
+    def _hold_game_object(self):
+        if self.held_game_object:
+            self.held_game_object.rect.center = self.parent.rect.center
+
+    def comp_activate(self):
+        super().comp_activate()
+        self._hold_game_object()
+
+    def comp_update(self):
+        super().comp_update()
+        self._hold_game_object()
+
+    def comp_reset(self):
+        super().comp_reset()
+        self._hold_game_object()
+
+    def comp_deactivate(self):
+        super().comp_deactivate()
+        self.held_game_object = None
 
     def comp_destroy(self):
         super().comp_destroy()
         self.held_game_object = None
+
+
+#
+# Light
+#
+class Light(GameObjectComponent):
+    def __init__(self, parent):
+        super().__init__(parent)

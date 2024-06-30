@@ -1,3 +1,5 @@
+from pygame.sprite import Group
+
 from config import *
 
 

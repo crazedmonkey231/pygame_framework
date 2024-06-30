@@ -80,11 +80,15 @@ class GameObjectBase(GameObject):
 #
 class GameObjectWithComponents(GameObjectBase):
     def __init__(self, parent: GameObject = None):
-        super().__init__(parent)
         self._components: list[GameObjectComponent] = list()
+        super().__init__(parent)
 
     def get_components(self):
         return self._components
+
+    def on_init(self):
+        super().on_init()
+        activate_components(self._components)
 
     def on_destroy(self):
         super().on_destroy()
@@ -95,6 +99,9 @@ class GameObjectWithComponents(GameObjectBase):
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
         update_components(self._components)
+
+    def reset(self):
+        reset_components(self._components)
 
     def add_game_object_component(self, component):
         from game_object_components import GameObjectComponent
@@ -166,8 +173,8 @@ class GridSlotGameObject(GameObjectWithComponents):
 #
 class Character(GameObjectWithMovement):
     def __init__(self, parent: GameObject = None):
-        super().__init__(parent)
         self.is_player_controlled: bool = False
+        super().__init__(parent)
         self._components.append(HealthComponent(self))
 
 
