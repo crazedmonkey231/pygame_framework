@@ -11,6 +11,11 @@ def clamp_value(value, start, stop):
     return min(max(value, start), stop)
 
 
+# Tree generator
+def tree():
+    return defaultdict(tree)
+
+
 # Image loader
 def load_image(name, color_key=None, scale=1) -> tuple[Surface, Rect]:
     image = pygame.image.load(os.path.join(data_dir, name)).convert_alpha()

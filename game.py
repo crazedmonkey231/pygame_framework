@@ -7,7 +7,9 @@ from config import *
 class Game(object):
     def __init__(self):
         self.pygame_init_return: tuple[int, int] = pygame.init()
-        self.screen: Surface = pygame.display.set_mode((1280, 720))
+        self.screen_size: tuple[int, int] = (1280, 720)
+        self.screen_size_vector2: Vector2 = Vector2(self.screen_size)
+        self.screen: Surface = pygame.display.set_mode(self.screen_size)
         self.screen_center: tuple[float, float] = (self.screen.get_width() / 2, self.screen.get_height() / 2)
         self.screen_center_vector2: Vector2 = Vector2(self.screen_center)
         self.background: Surface = Surface(self.screen.get_size()).convert()

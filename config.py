@@ -1,5 +1,6 @@
 import os
 import pygame
+from collections import defaultdict
 from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
@@ -14,6 +15,7 @@ from component import GameObjectComponent
 from game_object_components import HealthComponent, MovementComponent, CountDownComponent
 from level import Level
 from component import LevelComponent
+from level_components import GridLevelComponent
 
 
 if not pygame.font:
@@ -40,7 +42,7 @@ render_layer_top: int = 3
 game: Game = Game()
 game.load_level(Level)
 game.level.add_level_component(LevelComponent)
-game.level.add_level_component(LevelComponent)
+game.level.add_level_component(GridLevelComponent)
 print(len(game.level._level_components))
 game.level.remove_level_component(LevelComponent)
 print(len(game.level._level_components))
