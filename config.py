@@ -11,7 +11,8 @@ from component import (add_component, remove_component, get_component_by_class, 
                        deactivate_components, draw_components, reset_components, destroy_components)
 from game import Game
 from component import Component, GameComponent
-from game_object import GameObject, GameObjectBase, GameObjectWithComponents, GridSlotGameObject
+from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, GridSlotGameObject,
+                         LightGridSlotGameObject)
 from component import GameObjectComponent
 from game_object_components import HealthComponent, MovementComponent, CountDownComponent
 from level import Level

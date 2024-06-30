@@ -166,7 +166,26 @@ class GridSlotGameObject(GameObjectWithComponents):
         self.overlay_color = (0, 0, 0, 0)
 
 
+#
+# Light Grid Slot Game Object
+#
+class LightGridSlotGameObject(GridSlotGameObject):
+    def __init__(self, size: Vector2):
+        super().__init__(size)
+
+    def on_init(self):
+        super().on_init()
+        self._layer = 1
+        self.background_surface = Surface((self.size.x, self.size.y)).convert_alpha()
+        self.foreground_surface = Surface((self.size.x, self.size.y)).convert_alpha()
+        self.overlay_surface = Surface((self.size.x, self.size.y)).convert_alpha()
+        self.background_color = (0, 0, 0, 0)
+        self.foreground_color = (0, 0, 0, 0)
+        self.overlay_color = (0, 0, 0, 0)
+
+
 # ----------------------------------------------------------------------------------------------------------------------
+
 
 #
 # Character

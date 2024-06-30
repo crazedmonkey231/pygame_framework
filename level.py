@@ -64,6 +64,17 @@ class Level(object):
     def get_sprites_from_render_layer(self, layer: int = 0) -> list[Sprite]:
         return self._all_sprites.get_sprites_from_layer(layer)
 
+    # Get sprites from render layer with component
+    def get_sprites_from_render_layer_with_component(self, component: type, layer: int = 0) -> list[Sprite]:
+        if issubclass(component, GameObjectComponent):
+            def sprite_filter(sprite, comp):
+                if isinstance(sprite, GameObjectWithComponents):
+                    game_obj: GameObjectWithComponents = sprite
+                    return get_component_by_class(game_obj.get_components(), comp)
+                return False
+            return list(filter(lambda x: sprite_filter(x, component), self._all_sprites.get_sprites_from_layer(layer)))
+        return list()
+
     # Get sprites with positions from render layer
     def get_sprites_from_render_layer_with_pos(self, layer: int = 0) -> list[tuple[Sprite, Vector2]]:
         sprites = self._all_sprites.get_sprites_from_layer(layer)

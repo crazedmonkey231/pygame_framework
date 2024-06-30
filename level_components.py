@@ -22,16 +22,21 @@ class GridLevelComponent(LevelComponent):
         if self.grid_slots:
             self._grid_update()
 
+    def _generate_grid(self, grid_slot_obj_type: type):
+        grid: list[tuple[grid_slot_obj_type, Vector2]] = list()
+        if issubclass(grid_slot_obj_type, GridSlotGameObject):
+            for row in range(self.num_tiles_y):
+                for col in range(self.num_tiles_x):
+                    grid_slot_game_object: grid_slot_obj_type = grid_slot_obj_type(self.tile_size_vector2)
+                    center_pos: Vector2 = Vector2((col * self.tile_size + self.tile_size_half,
+                                                   row * self.tile_size + self.tile_size_half))
+                    grid.append((grid_slot_game_object, center_pos))
+                    self.grid_slots.append(grid_slot_game_object)
+        return grid
+
     def comp_activate(self):
         super().comp_activate()
-        grid: list[tuple[GridSlotGameObject, Vector2]] = list()
-        for row in range(self.num_tiles_y):
-            for col in range(self.num_tiles_x):
-                grid_slot_game_object: GridSlotGameObject = GridSlotGameObject(self.tile_size_vector2)
-                center_pos: Vector2 = Vector2((col * self.tile_size + self.tile_size_half,
-                                               row * self.tile_size + self.tile_size_half))
-                grid.append((grid_slot_game_object, center_pos))
-                self.grid_slots.append(grid_slot_game_object)
+        grid = self._generate_grid(GridSlotGameObject)
         self.parent.add_sprites_to_render_with_pos(grid)
 
     def comp_deactivate(self):
@@ -60,11 +65,13 @@ class LightGridLevelComponent(GridLevelComponent):
     def __init__(self, parent):
         super().__init__(parent)
 
+    def comp_activate(self):
+        grid = self._generate_grid(LightGridSlotGameObject)
+        self.parent.add_sprites_to_render_with_pos(grid)
+
     def _grid_update(self):
         super()._grid_update()
-        new_background_color = (0, 0, 0, 0)
         for grid_slot in self.grid_slots:
-            grid_slot.background_color = new_background_color
 
             dist_to_center = clamp_value(255 - (255 - grid_slot.distance_to_position(self.game.screen_center) * 2),
                                          0, 255)
