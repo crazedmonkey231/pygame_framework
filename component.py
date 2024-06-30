@@ -98,14 +98,16 @@ def remove_component(comp_type: type, comp_list: list[Component], component: Com
     is_type_of_comp = isinstance(component, type) and issubclass(component, comp_type)
     is_valid = is_instance_of_comp or is_type_of_comp
     if is_valid and comp_list and (component or optional_tags):
-        for comp in comp_list:
+        def list_filter(comp):
             f1 = (component and
                   (is_instance_of_comp and comp == component) or (is_type_of_comp and comp.__class__ == component))
             f2 = optional_tags and bool(comp.comp_tags & optional_tags)
             if f1 or f2:
                 comp.comp_deactivate()
                 comp.comp_destroy()
-                comp_list.remove(comp)
+                return False
+            return True
+        comp_list[:] = list(filter(lambda comp: list_filter(comp), comp_list))
 
 
 def activate_components(comp_list: list[Component]):

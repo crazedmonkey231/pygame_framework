@@ -40,6 +40,7 @@ render_layer_top: int = 3
 game: Game = Game()
 game.load_level(Level)
 game.level.add_level_component(LevelComponent)
+game.level.add_level_component(LevelComponent)
 print(len(game.level._level_components))
 game.level.remove_level_component(LevelComponent)
 print(len(game.level._level_components))
