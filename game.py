@@ -38,6 +38,12 @@ class Game(object):
         from component import GameComponent
         remove_component(GameComponent, self._game_components, component, optional_tags)
 
+    def initialize(self):
+        activate_components(self._game_components)
+
+    def reset(self):
+        reset_components(self._game_components)
+
     def load_level(self, level):
         from level import Level
         if self.level:

@@ -1,11 +1,11 @@
-from config import *
+from component import *
 
 
 #
 # Health Component
 #
 class HealthComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, health: float = 100, health_max: float = 100,
+    def __init__(self, parent, health: float = 100, health_max: float = 100,
                  health_update_change: float = 0):
         super().__init__(parent)
         self.health: float = health
@@ -27,7 +27,7 @@ class HealthComponent(GameObjectComponent):
 # Movement Component
 #
 class MovementComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, move_speed: Vector2 = Vector2(0, 0)):
+    def __init__(self, parent, move_speed: Vector2 = Vector2(0, 0)):
         super().__init__(parent)
         self.move_speed: Vector2 = move_speed
         self.velocity: Vector2 = Vector2(0, 0)
@@ -36,9 +36,9 @@ class MovementComponent(GameObjectComponent):
         super().comp_update()
         rect = self.parent.rect
         center = rect.center
-        center_x = center[0] + game.delta_value(self.move_speed.x)
-        center_y = center[1] + game.delta_value(self.move_speed.y)
-        self.parent.rect = rect.move((center_x, center_y))
+        center_x = center[0] + self.game.delta_value(self.move_speed.x)
+        center_y = center[1] + self.game.delta_value(self.move_speed.y)
+        self.parent.rect.center = (center_x, center_y)
         self.velocity = Vector2(center_x - center[0], center_y - center[1])
 
 
@@ -46,7 +46,7 @@ class MovementComponent(GameObjectComponent):
 # Count Down Component
 #
 class CountDownComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, time_to_live: float = 10, should_destroy: bool = True):
+    def __init__(self, parent, time_to_live: float = 10, should_destroy: bool = True):
         super().__init__(parent)
         self.countdown_active: bool = True
         self.should_destroy: bool = should_destroy
@@ -60,7 +60,7 @@ class CountDownComponent(GameObjectComponent):
 
     def on_countdown_end(self):
         if self.should_destroy:
-            if self.parent.get_component_by_class(HealthComponent):
+            if get_component_by_class(self.parent.get_components(), HealthComponent):
                 self.parent.apply_damage(self.parent, -config_health_max)
             else:
                 self.parent.kill()
@@ -80,9 +80,8 @@ class CountDownComponent(GameObjectComponent):
 # Power Up Tracker Component
 #
 class PowerTrackerComponent(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents):
+    def __init__(self, parent):
         super().__init__(parent)
-        self.parent: GameObjectWithComponents = parent
         self.total_power: float = 0
 
     def is_active(self):
@@ -99,7 +98,7 @@ class PowerTrackerComponent(GameObjectComponent):
 # Game Object Holder Component
 #
 class GameObjectHolder(GameObjectComponent):
-    def __init__(self, parent: GameObjectWithComponents, held_game_object: GameObject):
+    def __init__(self, parent, held_game_object: object):
         super().__init__(parent)
         self.held_game_object: GameObject = held_game_object
         self.needs_update = False

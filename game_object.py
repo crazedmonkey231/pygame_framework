@@ -1,4 +1,5 @@
 from config import *
+from game_object_components import HealthComponent, MovementComponent, CountDownComponent
 
 
 #
@@ -79,6 +80,9 @@ class GameObjectWithComponents(GameObjectBase):
         super().__init__(parent)
         self._components: list[GameObjectComponent] = list()
 
+    def get_components(self):
+        return self._components
+
     def on_destroy(self):
         super().on_destroy()
         deactivate_components(self._components)
@@ -150,7 +154,6 @@ class GridSlotGameObject(GameObjectWithComponents):
         self.background_color = (255, 255, 255, 255)
         self.foreground_color = (0, 0, 0, 0)
         self.overlay_color = (0, 0, 0, 0)
-
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -245,4 +248,3 @@ class ProgressBar(Widget):
 
     def update(self, *args, **kwargs):
         pass
-

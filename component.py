@@ -6,6 +6,8 @@ from config import *
 #
 class Component(object):
     def __init__(self, parent):
+        from config import game
+        self.game = game
         self.parent = parent
         self.needs_update: bool = True
         self.needs_draw: bool = False
@@ -73,7 +75,7 @@ def get_components_by_class(component_list: list[Component], component_class: ty
 def get_component_by_class(component_list: list[Component], component_class: type) -> Component:
     comps = get_components_by_class(component_list, component_class)
     if comps:
-        return get_components_by_class(component_list, component_class)[0]
+        return comps[0]
     return None
 
 

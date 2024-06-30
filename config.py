@@ -1,6 +1,7 @@
 import os
 import pygame
 from collections import defaultdict
+import random
 from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
@@ -41,4 +42,3 @@ render_layer_middle: int = 2
 render_layer_top: int = 3
 
 game: Game = Game()
-
