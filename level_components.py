@@ -38,7 +38,8 @@ class GridLevelComponent(LevelComponent):
 
     def comp_deactivate(self):
         super().comp_deactivate()
-        self.parent.remove_sprites_from_render(self.grid_slots)
+        for slot in self.grid_slots:
+            slot.kill()
         self.grid_slots.clear()
 
 
