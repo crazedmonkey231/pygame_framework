@@ -68,10 +68,10 @@ class CountDownComponent(GameObjectComponent):
         self.countdown_active = False
         self.needs_update = False
 
-    def comp_update(self,):
+    def comp_update(self):
         super().comp_update()
         if self.countdown_active:
-            self.time_to_live -= game.delta_time
+            self.time_to_live -= self.game.delta_time
             if 0 >= self.time_to_live:
                 self.on_countdown_end()
 

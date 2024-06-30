@@ -52,4 +52,10 @@ class DiscoGridLevelComponent(GridLevelComponent):
                                 random.randint(0, 255),
                                 255)
         random_index = random.randint(0, len(self.grid_slots) - 1)
-        self.grid_slots[random_index].background_color = new_background_color
+        grid_slot = self.grid_slots[random_index]
+        grid_slot.background_color = new_background_color
+
+        dist_to_center = clamp_value(255 - (255 - grid_slot.distance_to_position(self.game.screen_center) * 2), 0, 255)
+
+        new_overlay_color = (0, 0, 0, dist_to_center)
+        grid_slot.overlay_color = new_overlay_color

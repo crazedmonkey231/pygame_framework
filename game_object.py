@@ -8,6 +8,8 @@ from game_object_components import HealthComponent, MovementComponent, CountDown
 class GameObject(Sprite):
     def __init__(self, parent=None):
         Sprite.__init__(self)
+        from config import game
+        self.game = game
         self.background_surface: Surface = None
         self.foreground_surface: Surface = None
         self.overlay_surface: Surface = None
@@ -42,6 +44,7 @@ class GameObject(Sprite):
 
     def kill(self):
         self.on_destroy()
+        self.game = None
         self.parent = None
         super().kill()
 
