@@ -57,6 +57,9 @@ class Level(object):
                 sprite.rect.center = (pos.x, pos.y)
             self._all_sprites.add(sprite)
 
+    def remove_sprites_from_render(self, sprites: list[Sprite]):
+        self._all_sprites.remove(sprites)
+
     # Get sprites from render layer
     def get_sprites_from_render_layer(self, layer: int = 0) -> list[Sprite]:
         return self._all_sprites.get_sprites_from_layer(layer)

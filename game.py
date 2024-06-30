@@ -6,8 +6,7 @@ from config import *
 #
 class Game(object):
     def __init__(self):
-        self.pygame_init_return: tuple[int, int] = pygame.init()
-        self.screen_size: tuple[int, int] = (1280, 720)
+        self.screen_size: tuple[int, int] = (240, 240)
         self.screen_size_vector2: Vector2 = Vector2(self.screen_size)
         self.screen: Surface = pygame.display.set_mode(self.screen_size)
         self.screen_center: tuple[float, float] = (self.screen.get_width() / 2, self.screen.get_height() / 2)
@@ -51,20 +50,16 @@ class Game(object):
         if self.level:
             self.level.load()
 
-    # Main
-    def main(self):
-        while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-            update_components(self._game_components)
-            if self.level:
-                self.level.update()
-                self.screen.blit(self.background, (0, 0))
-                draw_components(self._game_components)
-                self.level.draw()
-                self.screen.blit(self.overlay, (0, 0))
-                pygame.display.flip()
-            if self.slowdown_factor_max < self.slowdown_factor or self.slowdown_factor < 1:
-                self.slowdown_factor = clamp_value(self.slowdown_factor, 1, self.slowdown_factor_max)
-            self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_factor
+    def game_update(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+        update_components(self._game_components)
+        self.level.update()
+        self.screen.blit(self.background, (0, 0))
+        draw_components(self._game_components)
+        self.level.draw()
+        self.screen.blit(self.overlay, (0, 0))
+        if self.slowdown_factor_max < self.slowdown_factor or self.slowdown_factor < 1:
+            self.slowdown_factor = clamp_value(self.slowdown_factor, 1, self.slowdown_factor_max)
+        self.delta_time = (self.clock.tick(self.fps) / 1000) / self.slowdown_factor

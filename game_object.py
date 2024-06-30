@@ -7,21 +7,34 @@ from config import *
 class GameObject(Sprite):
     def __init__(self, parent=None):
         Sprite.__init__(self)
-        self.on_init()
+        self.background_surface: Surface = None
+        self.foreground_surface: Surface = None
+        self.overlay_surface: Surface = None
+        self.background_color = (0, 0, 0, 0)
+        self.foreground_color = (0, 0, 0, 0)
+        self.overlay_color = (0, 0, 0, 0)
         self.parent: GameObject = parent if isinstance(parent, GameObject) else None
-        self._layer: int = render_layer_default
+        self._layer: int = 0
         self.tags: set[str] = set()
+        self.on_init()
+        self.image = self.background_surface
+        self.rect = self.image.get_rect() if self.image else None
         self.half_height = self.rect.height / 2 if self.rect else 0
         self.half_width = self.rect.width / 2 if self.rect else 0
-        self.background_surface: Surface = None
-        self.background_color = (0, 0, 0, 0)
-        self.foreground_surface: Surface = None
-        self.foreground_color = (0, 0, 0, 0)
-        self.overlay_surface: Surface = None
-        self.overlay_color = (0, 0, 0, 0)
 
     def on_init(self):
         pass
+
+    def update(self, *args, **kwargs):
+        if self.background_surface:
+            self.background_surface.fill(self.background_color)
+            self.image.blit(self.background_surface, (0, 0))
+        if self.foreground_surface:
+            self.foreground_surface.fill(self.foreground_color)
+            self.image.blit(self.foreground_surface, (0, 0))
+        if self.overlay_surface:
+            self.overlay_surface.fill(self.overlay_color)
+            self.image.blit(self.overlay_surface, (0, 0))
 
     def on_destroy(self):
         pass
@@ -119,6 +132,21 @@ class GameObjectWithTimer(GameObjectWithComponents):
     def __init__(self, parent: GameObject = None, time_to_live: float = 0):
         super().__init__(parent)
         self._components.append(CountDownComponent(self, time_to_live))
+
+
+#
+# Grid Slot Game Object
+#
+class GridSlotGameObject(GameObjectWithComponents):
+    def __init__(self, size: Vector2):
+        self.size: Vector2 = size
+        super().__init__(None)
+
+    def on_init(self):
+        super().on_init()
+        self.background_surface = Surface((self.size.x, self.size.y))
+        self.background_color = (255, 255, 255, 255)
+        self.background_surface.fill(self.background_color)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
