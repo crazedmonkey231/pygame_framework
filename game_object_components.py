@@ -9,6 +9,7 @@ class HealthComponent(GameObjectComponent):
                  health_update_change: float = 0):
         super().__init__(parent)
         self.health: float = health
+        from config import config_health_max
         self.health_max: float = min(health_max, config_health_max)
         self.health_update_change: float = health_update_change
 
@@ -131,6 +132,8 @@ class GameObjectHolder(GameObjectComponent):
 #
 # Light
 #
-class Light(GameObjectComponent):
-    def __init__(self, parent):
+class LightGameObjectComponent(GameObjectComponent):
+    def __init__(self, parent, radius: float = 100, falloff_factor: float = 5):
+        self.radius = radius
+        self.falloff_factor = falloff_factor
         super().__init__(parent)

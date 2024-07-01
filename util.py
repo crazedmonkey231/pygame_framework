@@ -11,6 +11,11 @@ def clamp_value(value, start, stop):
     return min(max(value, start), stop)
 
 
+# Map range clamped
+def map_range_clamped(value, start1, stop1, start2, stop2):
+    return clamp_value(map_range(value, start1, stop1, start2, stop2), start2, stop2)
+
+
 # Tree generator
 def tree():
     return defaultdict(tree)

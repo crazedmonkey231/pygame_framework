@@ -24,6 +24,7 @@ class GameObject(Sprite):
         self.rect = self.image.get_rect() if self.image else None
         self.half_height = self.rect.height / 2 if self.rect else 0
         self.half_width = self.rect.width / 2 if self.rect else 0
+        self.cached_center_vector2: Vector2 = Vector2(self.rect.center) if self.rect else Vector2(0, 0)
 
     def on_init(self):
         pass
@@ -38,6 +39,7 @@ class GameObject(Sprite):
         if self.overlay_surface:
             self.overlay_surface.fill(self.overlay_color)
             self.image.blit(self.overlay_surface, (0, 0))
+        self.cached_center_vector2 = Vector2(self.rect.center) if self.rect else Vector2(0, 0)
 
     def on_destroy(self):
         pass
@@ -58,7 +60,7 @@ class GameObject(Sprite):
         pass
 
     def distance_to_game_object(self, other_sprite) -> float:
-        if issubclass(other_sprite, GameObject):
+        if isinstance(other_sprite, GameObject):
             other_game_object: GameObject = other_sprite
             return Vector2(self.rect.center).distance_to(Vector2(other_game_object.rect.center))
         return -1
@@ -158,6 +160,7 @@ class GridSlotGameObject(GameObjectWithComponents):
 
     def on_init(self):
         super().on_init()
+        self._layer = -1
         self.background_surface = Surface((self.size.x, self.size.y)).convert_alpha()
         self.foreground_surface = Surface((self.size.x, self.size.y)).convert_alpha()
         self.overlay_surface = Surface((self.size.x, self.size.y)).convert_alpha()
@@ -203,7 +206,16 @@ class Character(GameObjectWithMovement):
 class Player(Character):
     def __init__(self, parent: GameObject = None):
         super().__init__(parent)
-        self.is_player_controlled = True
+        self.is_player_controlled: bool = True
+
+    def on_init(self):
+        super().on_init()
+        self.background_surface = Surface((1, 1)).convert_alpha()
+        self.background_color = (0, 0, 0, 0)
+
+    def update(self, *args, **kwargs):
+        super().update(*args, **kwargs)
+        self.rect.center = pygame.mouse.get_pos()
 
 
 #

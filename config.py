@@ -6,15 +6,15 @@ from pygame import display, Surface, Clock, Vector2, Rect
 from pygame.font import Font
 from pygame.mixer import Sound
 from pygame.sprite import Sprite, RenderUpdates, LayeredUpdates, Group
-from util import map_range, clamp_value, load_image, load_sound
+from util import map_range, clamp_value, load_image, load_sound, map_range_clamped
 from component import (add_component, remove_component, get_component_by_class, update_components, activate_components,
                        deactivate_components, draw_components, reset_components, destroy_components)
 from game import Game
 from component import Component, GameComponent
 from game_object import (GameObject, GameObjectBase, GameObjectWithComponents, GridSlotGameObject,
-                         LightGridSlotGameObject)
+                         LightGridSlotGameObject, Player)
 from component import GameObjectComponent
-from game_object_components import HealthComponent, MovementComponent, CountDownComponent
+from game_object_components import HealthComponent, MovementComponent, CountDownComponent, LightGameObjectComponent
 from level import Level
 from component import LevelComponent
 from level_components import GridLevelComponent, DiscoGridLevelComponent, LightGridLevelComponent

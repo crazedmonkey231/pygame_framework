@@ -1,3 +1,5 @@
+import math
+
 from config import *
 
 
@@ -71,9 +73,15 @@ class LightGridLevelComponent(GridLevelComponent):
 
     def _grid_update(self):
         super()._grid_update()
+        sprites = self.parent.get_sprites_from_render_layer_with_component(LightGameObjectComponent)
         for grid_slot in self.grid_slots:
-
-            dist_to_center = clamp_value(255 - (255 - grid_slot.distance_to_position(self.game.screen_center) * 2),
-                                         0, 255)
-            new_overlay_color = (0, 0, 0, dist_to_center)
+            new_overlay_color = (0, 0, 0, 255)
+            for s in sprites:
+                game_obj: GameObjectWithComponents = s
+                comps = game_obj.get_components()
+                light_comp: LightGameObjectComponent = get_component_by_class(comps, LightGameObjectComponent)
+                dist_to_obj = grid_slot.distance_to_game_object(game_obj)
+                if dist_to_obj <= light_comp.radius:
+                    opacity = clamp_value(255 - (255 - dist_to_obj * light_comp.falloff_factor), 0, 255)
+                    new_overlay_color = (0, 0, 0, opacity)
             grid_slot.overlay_color = new_overlay_color
