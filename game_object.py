@@ -229,6 +229,17 @@ class AiPlayer(Character):
 # ----------------------------------------------------------------------------------------------------------------------
 
 #
+# Projectile
+#
+class Projectile(GameObjectWithMovement):
+    def __init__(self, parent, move_speed: Vector2):
+        super().__init__(parent, move_speed)
+        self._components.append(HealthComponent(self))
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+#
 # Effect
 #
 class Effect(GameObjectWithMovement):
